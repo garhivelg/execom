@@ -2,7 +2,7 @@ doctype html
 html
   head
     meta(charset="UTF-8")
-    title Приватизация{% if title %} - {{title}}{% endif %}
+    title Исполком{% if title %} - {{title}}{% endif %}
     link(rel="icon", href="{{ url_for('static', filename='favicon/favicon.ico') }}")
     link(href="{{ url_for('static', filename='css/bootstrap.min.css') }}", rel="stylesheet")
     link(href="{{ url_for('static', filename='css/main.css') }}", rel="stylesheet")
@@ -19,7 +19,9 @@ html
         div(id="navbar", class="navbar-collapse collapse")
           ul(class="nav navbar-nav")
             li
-              a(href="{{ url_for('list_protocols') }}") Список
+              a(href="{{ url_for('list_protocols') }}") Протоколы
+            li
+              a(href="{{ url_for('list_decisions') }}") Решения
             li
               a(href="{{ url_for('edit_case') }}") Добавить
             li(class="dropdown")

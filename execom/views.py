@@ -61,6 +61,22 @@ def edit_protocol(protocol_id=None, case_id=None):
     return render_template("edit_protocol.html", form=form, protocol=protocol, decisions=decisions)
 
 
+@app.route("/decisions")
+def list_decisions():
+    items = Decision.query.all()
+
+    return render_template(
+        "list.html",
+        items=[
+            [
+                i,
+                url_for("edit_decision", decision_id=i.id)
+            ] for i in items
+        ],
+        add=url_for("edit_decision"),
+    )
+
+
 @app.route("/decision/add", methods=["GET", "POST", ])
 @app.route("/decision/edit/<int:decision_id>", methods=["GET", "POST", ])
 @app.route("/decision/add/<int:protocol_id>", methods=["GET", "POST", ])
