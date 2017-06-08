@@ -1,0 +1,19 @@
+| {% extends "index.html" %}
+| {% block content %}
+| {% if add %}
+div(class="btn-toolbar")
+  a(href="{{ add }}", class="btn btn-default") <span class="glyphicon glyphicon-plus"></span> Добавить
+| {% endif %}
+| {% if items %}
+ul
+  | {% for i in items %}
+  li
+    a(href="{{ i[1] }}") {{ i[0] }}
+    | {% if  i | length > 2 %}
+    a(href="{{ i[2] }}") <span class="glyphicon glyphicon-edit"></span>
+    | {% endif %}
+  | {% endfor %}
+| {% else %}
+h3 Список пуст
+| {% endif %}
+| {% endblock %}
