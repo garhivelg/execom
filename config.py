@@ -10,8 +10,8 @@ class Config(object):
     DEBUG = False
     TESTING = False
 
-    # SQLALCHEMY_DATABASE_URI = 'sqlite:///db/privatisation.db'
-    SQLALCHEMY_DATABASE_URI = 'sqlite://'
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///../db/execom.db'
+    # SQLALCHEMY_DATABASE_URI = 'sqlite://'
 
     LOG = {
         "FILENAME": os.path.join(BASE_DIR, "log", "execom.log"),

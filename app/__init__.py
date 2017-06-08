@@ -7,7 +7,7 @@ import logging
 from logging.handlers import RotatingFileHandler
 
 
-def create_app(debug=False, config='config.ProfuctionConfig'):
+def create_app(debug=False, config='config.ProductionConfig'):
     app = Flask(__name__)
     if debug:
         app.config.from_object('config.DebugConfig')

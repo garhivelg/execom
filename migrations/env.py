@@ -9,14 +9,19 @@ config = context.config
 
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.
-print(config.config_file_name)
 fileConfig(config.config_file_name)
+
+import os
+import sys
+parent_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+sys.path.append(parent_dir)
 
 # add your model's MetaData object here
 # for 'autogenerate' support
 # from myapp import mymodel
 # target_metadata = mymodel.Base.metadata
-target_metadata = None
+from app import db
+target_metadata = db.metadata
 
 # other values from the config, defined by the needs of env.py,
 # can be acquired:
