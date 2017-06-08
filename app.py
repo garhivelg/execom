@@ -1,25 +1,14 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
+from config import app_config
 
 
-import os
 import logging
 from logging.handlers import RotatingFileHandler
 
 
-def create_app(debug=False, config='config.ProductionConfig'):
-    app = Flask(__name__)
-    if debug:
-        app.config.from_object('config.DebugConfig')
-    else:
-        app.config.from_object(config)
-
-    # Session(app)
-
-    db = SQLAlchemy(app)
-    db.create_all()
-
-    log_config = app.config.get("LOG", dict())
+def create_logger(log_config=dict()):
     handler = RotatingFileHandler(
         log_config.get("FILENAME"),
         maxBytes=log_config.get("MAX_BYTES"),
@@ -27,14 +16,35 @@ def create_app(debug=False, config='config.ProductionConfig'):
     )
     formatter = logging.Formatter(log_config.get("FORMAT"))
     handler.setFormatter(formatter)
-    app.logger.addHandler(handler)
+    return handler
+
+
+def create_app(debug=False, config_name='production'):
+    app = Flask(__name__)
+    app.config.from_object(app_config[config_name])
+
+    # Session(app)
+
+    db = SQLAlchemy(app)
+    db.create_all()
+
+    log_config = app.config.get("LOG", dict())
+    app.logger.addHandler(create_logger(log_config))
+
+    migrate = Migrate(app, db)
+
+    # from execom import models
 
     return app, db
 
 
+import os
+
+
 debug = os.environ.get('FLASK_DEBUG', False)
-app, db = create_app(debug=debug)
+config_name = os.environ.get('FLASK_CONFIG', 'production')
+app, db = create_app(config_name=config_name)
 
 
-from execom import views
-from case import views
+from execom.views import *
+from case.views import *

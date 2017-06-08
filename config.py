@@ -11,6 +11,7 @@ class Config(object):
     TESTING = False
     SECRET_KEY = "ThereIsNoSpoon"
 
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
     SQLALCHEMY_DATABASE_URI = 'sqlite:///db/execom.db'
     # SQLALCHEMY_DATABASE_URI = 'sqlite://'
 
@@ -36,7 +37,15 @@ class ProductionConfig(Config):
 
 class DebugConfig(Config):
     DEBUG = True
+    SQLALCHEMY_ECHO = True
 
 
 class TestingConfig(Config):
     TESTING = True
+
+
+app_config = {
+    'development': DebugConfig,
+    'production': ProductionConfig,
+    'testing': TestingConfig,
+}
