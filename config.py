@@ -9,8 +9,9 @@ BASE_DIR = os.path.abspath(os.getcwd())
 class Config(object):
     DEBUG = False
     TESTING = False
+    SECRET_KEY = "ThereIsNoSpoon"
 
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///../db/execom.db'
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///db/execom.db'
     # SQLALCHEMY_DATABASE_URI = 'sqlite://'
 
     LOG = {
@@ -25,6 +26,8 @@ class Config(object):
     BACKUP_PATH = os.path.join(BASE_DIR, "db", "backup")
     DB_FILENAME = "privatisation.db"
     BACKUP_FILENAME = "privatisation-%s.db"
+
+    VIEW_CASE = "edit_case"
 
 
 class ProductionConfig(Config):
