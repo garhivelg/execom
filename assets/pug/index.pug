@@ -29,12 +29,10 @@ html
                   a(href="{{ url_for('list_registers') }}") Описи
                 li
                   a(href="{{ url_for('list_cases') }}") Дела
-                li
-                  a(href="{{ url_for('list_facilities') }}") Предприятия
     | {% with messages = get_flashed_messages() %}
     |   {% for message in messages %}
     div(class="alert alert-info")
-    | {{ message }}
+      | {{ message }}
     |   {% endfor %}
     | {% endwith %}
 
