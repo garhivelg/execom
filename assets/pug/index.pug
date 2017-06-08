@@ -19,7 +19,7 @@ html
         div(id="navbar", class="navbar-collapse collapse")
           ul(class="nav navbar-nav")
             li
-              a(href="{{ url_for('list_cases') }}") Список
+              a(href="{{ url_for('list_protocols') }}") Список
             li
               a(href="{{ url_for('edit_case') }}") Добавить
             li(class="dropdown")
@@ -44,7 +44,7 @@ html
     
     script(src="{{ url_for('static', filename='js/jquery.min.js') }}")
     script(src="{{ url_for('static', filename='js/bootstrap.min.js') }}")
-    script(type=text/javascript)
+    script(type="text/javascript")
       | $(function() {
       |   $('#filterClick').bind('click', function() {
       |     $('#filter').toggle();
