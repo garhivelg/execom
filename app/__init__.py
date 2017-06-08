@@ -7,9 +7,12 @@ import logging
 from logging.handlers import RotatingFileHandler
 
 
-def create_app(debug=False):
+def create_app(debug=False, config='config.ProfuctionConfig'):
     app = Flask(__name__)
-    app.config.from_object('config')
+    if debug:
+        app.config.from_object('config.DebugConfig')
+    else:
+        app.config.from_object(config)
 
     # Session(app)
 
