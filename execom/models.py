@@ -32,12 +32,13 @@ class Decision(db.Model):
         info={'label': "Решение №"}
     )
     decision_num = db.Column(db.Integer, nullable=False, default=0)
+    topic = db.Column(db.String(256), info={'label': "Тема"})
     description = db.Column(db.UnicodeText, info={'label': "Описание"})
 
     protocol = db.relationship("Protocol")
 
-    def title(self, format="%s Решение №%s"):
-        return format % (self.protocol, self.decision_id)
+    def title(self, format="%s Решение №%s \"%s\""):
+        return format % (self.protocol, self.decision_id, self.topic)
 
     def __repr__(self):
         return self.title()
