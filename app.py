@@ -36,4 +36,5 @@ debug = os.environ.get('FLASK_DEBUG', False)
 app, db = create_app(debug=debug)
 
 
+from execom import views
 from case import views

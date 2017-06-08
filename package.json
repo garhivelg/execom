@@ -4,7 +4,7 @@
   "description": "Executiv committee database for archive",
   "main": "manage.py",
   "scripts": {
-    "preinstall": "git pull && pip install -r requirements.txt && bower install",
+    "preinstall": "git pull && pip install -r requirements.txt && alembic upgrade head && bower install",
     "prestart": "gulp",
     "start": "./manage.py runserver",
     "test": "echo \"Error: no test specified\" && exit 1"
