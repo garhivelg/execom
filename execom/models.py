@@ -21,6 +21,7 @@ class Protocol(db.Model):
     def __repr__(self):
         return self.title()
 
+
 class Decision(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     protocol_id = db.Column(db.Integer, db.ForeignKey('protocol.id'))
@@ -35,7 +36,7 @@ class Decision(db.Model):
 
     protocol = db.relationship("Protocol")
 
-    def title(self, format="%s Решение №%d"):
+    def title(self, format="%s Решение №%s"):
         return format % (self.protocol, self.decision_id)
 
     def __repr__(self):

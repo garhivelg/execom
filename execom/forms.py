@@ -25,15 +25,17 @@ class ProtocolForm(ModelForm):
         query_factory=lambda: Case.query.all(),
         allow_blank=True,
     )
+
     class Meta:
         model = Protocol
 
 
 class DecisionForm(ModelForm):
-    case = QuerySelectField(
+    protocol = QuerySelectField(
         "Протокол",
         query_factory=lambda: Protocol.query.all(),
         allow_blank=True,
     )
+
     class Meta:
         model = Decision
