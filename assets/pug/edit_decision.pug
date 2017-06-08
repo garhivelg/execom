@@ -7,9 +7,62 @@ div(class="row")
       p(class="sized-field") {{ form.protocol.label }} {{ form.protocol(class="form-control") }}
       p(class="sized-field") {{ form.decision_id.label }} {{ form.decision_id(class="form-control") }}
       p(class="sized-field") {{ form.topic.label }} {{ form.topic(class="form-control") }}
+      div(class="dz-preview")
+        | {% if files %}
+        div(class="dz-image")
+          img(src="{{ url_for('static', filename='upload/' + 'form.image.data') }}")
+        | {% endif %}
+      div(id="movie-dropzone", class="dropzone")
+        div(class="dropzone-previews")
+        div(class="dz-message", data-dz-message)
+          span Drop image here
       p(class="sized-field")
         | {{ form.description.label }}
         | {{ form.description(rows=5, cols=40, class="form-control") }}
       p
         input(type="submit", class="btn btn-success", value="Сохранить")
+| {% endblock %}
+| {% block script %}
+script(type="text/javascript")
+  | Dropzone.options.movieDropzone = { 
+  | // The configuration we've talked about above
+  | autoProcessQueue: true,
+  | uploadMultiple: true,
+  | parallelUploads: 100,
+  | maxFiles: 10,
+  | url: "/upload/image/movie",
+  | acceptedFiles: "image/*",
+  |
+  | // The setting up of the dropzone
+  | init: function() {
+  |   var myDropzone = this;
+  |
+  |   this.hiddenFileInput.removeAttribute('multiple');
+  |
+  |   this.on("addedfile", function (file) {
+  |     if(this.files.length > 1) {
+  |       this.removeFile(this.files[0]) 
+  |     }
+  |   });
+  |
+  |   // Listen to the sendingmultiple event. In this case, it's the sendingmultiple event instead
+  |   // of the sending event because uploadMultiple is set to true.
+  |   this.on('sending', function (data, xhr, formData) {
+  |     $("#movie-form :input").each(function() {
+  |       name = $(this).attr("name");
+  |       if(name != 'undefined') {
+  |         formData.append(name, $(this).val());
+  |       }
+  |     })
+  |     formData.append("Username", $("#slug").val());
+  |   });
+  | },
+  |
+  | success: function(file, response){
+  |    console.log(file);
+  |    console.log(response);
+  |    console.log(response.filename);
+  |    $('#image').val(response.filename);
+  |   }
+  | }
 | {% endblock %}

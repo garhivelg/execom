@@ -3,7 +3,7 @@ from flask.helpers import url_for
 from app import db, app
 
 
-from .models import Protocol, Decision
+from .models import Protocol, Decision, DecisionMedia
 from .forms import ProtocolForm, DecisionForm
 
 
@@ -102,4 +102,6 @@ def edit_decision(decision_id=None, protocol_id=None):
 
     app.logger.debug(form.errors)
 
-    return render_template("edit_decision.html", form=form, decision=decision)
+    files = DecisionMedia.query.filter_by(decision=decision).all()
+
+    return render_template("edit_decision.html", form=form, decision=decision, files=files)

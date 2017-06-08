@@ -5,6 +5,7 @@ html
     title Исполком{% if title %} - {{title}}{% endif %}
     link(rel="icon", href="{{ url_for('static', filename='favicon/favicon.ico') }}")
     link(href="{{ url_for('static', filename='css/bootstrap.min.css') }}", rel="stylesheet")
+    link(href="{{ url_for('static', filename='css/dropzone.min.css') }}", rel="stylesheet")
     link(href="{{ url_for('static', filename='css/main.css') }}", rel="stylesheet")
   body
     nav(class="navbar navbar-inverse navbar-fixed-top")
@@ -44,6 +45,7 @@ html
     
     script(src="{{ url_for('static', filename='js/jquery.min.js') }}")
     script(src="{{ url_for('static', filename='js/bootstrap.min.js') }}")
+    script(src="{{ url_for('static', filename='js/dropzone.min.js') }}")
     script(type="text/javascript")
       | $(function() {
       |   $('#filterClick').bind('click', function() {

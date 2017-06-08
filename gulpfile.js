@@ -26,6 +26,16 @@ gulp.task('jquery', function(){
     .pipe(gulp.dest('static/js'))
 });
 
+gulp.task('dropzone_css', function(){
+  return gulp.src('assets/bower_components/dropzone/dist/min/dropzone.min.css')
+    .pipe(gulp.dest('static/css'))
+});
+
+gulp.task('dropzone_js', function(){
+  return gulp.src('assets/bower_components/dropzone/dist/min/dropzone.min.js')
+    .pipe(gulp.dest('static/js'))
+});
+
 gulp.task('favicon', function(){
   return gulp.src('assets/favicon/*')
     .pipe(gulp.dest('static/favicon'))
@@ -45,4 +55,5 @@ gulp.task('css', function(){
 });
 
 gulp.task('bootstrap', ['bootstrap_css', 'bootstrap_js', 'bootstrap_fonts']);
-gulp.task('default', ['favicon', 'html', 'css', 'jquery', 'bootstrap']);
+gulp.task('dropzone', ['dropzone_css', 'dropzone_js']);
+gulp.task('default', ['favicon', 'html', 'css', 'jquery', 'bootstrap', 'dropzone']);

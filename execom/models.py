@@ -42,3 +42,19 @@ class Decision(db.Model):
 
     def __repr__(self):
         return self.title()
+
+
+class DecisionMedia(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    decision_id = db.Column(db.Integer, db.ForeignKey('decision.id'))
+    filename = db.Column(db.String(32), nullable=False, info={'label': "Файл"})
+    title = db.Column(db.String(128), info={'label': "Заголовок"})
+    description = db.Column(db.UnicodeText, info={'label': "Описание"})
+
+    decision = db.relationship("Decision")
+
+    def __repr__(self):
+        if self.title:
+            return self.title
+        else:
+            return self.filename
