@@ -1,0 +1,24 @@
+{
+  "name": "execom",
+  "description": "Executiv committee database for archive",
+  "main": "manage.py",
+  "authors": [
+    "Dmitry Kutsenko <d2emonium@gmail.com>"
+  ],
+  "license": "GPL-3.0",
+  "keywords": [
+    "archive",
+    "database",
+    "documents"
+  ],
+  "homepage": "https://github.com/garhivelg/execom",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "assets/bower_components",
+    "test",
+    "tests"
+  ]
+}
