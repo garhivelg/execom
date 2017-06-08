@@ -1,3 +1,4 @@
+#! /usr/bin/env python
 from flask_script import Manager
 
 
