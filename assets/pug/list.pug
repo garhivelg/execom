@@ -1,19 +1,52 @@
-| {% extends "index.html" %}
-| {% block content %}
-| {% if add %}
-div(class="btn-toolbar")
-  a(href="{{ add }}", class="btn btn-default") <span class="glyphicon glyphicon-plus"></span> Добавить
-| {% endif %}
-| {% if items %}
-ul
-  | {% for i in items %}
-  li
-    a(href="{{ i[1] }}") {{ i[0] }}
-    | {% if  i | length > 2 %}
-    a(href="{{ i[2] }}") <span class="glyphicon glyphicon-edit"></span>
+extends index.pug
+
+block content
+  div(class="panel panel-primary")
+    .panel-heading
+      h4.panel-title 
+        block panel_head
+          | Title
+    | {% if add %}
+    .panel-group#accordion1
+      div(class="panel panel-default")
+        .panel-heading
+          h4.panel-title 
+            a(class="acordion-toggle", href="#accordion1_href") Search <span class="caret"></span>
+        div(id="accordion1_href", class="panel-collapse collapse")
+          div(class="btn-toolbar")
+            a(href="{{ add }}", class="btn btn-default") <span class="glyphicon glyphicon-plus"></span> Добавить
     | {% endif %}
-  | {% endfor %}
-| {% else %}
-h3 Список пуст
-| {% endif %}
-| {% endblock %}
+    div
+      div(class="well well-sm")
+        a(href="#", class="btn btn-sm btn-primary") <i class="glyphicon glyphicon-edit"></i>
+        a(href="{{ add }}", class="btn btn-default") <span class="glyphicon glyphicon-plus"></span> Добавить
+        .pull-right
+          strong Количество: 
+          | {{ items | count }}
+      | {% if items %}
+      .table-responsive
+        table(class="table table-bordered table-hover")
+          thead
+            tr
+              th
+                a(href="#") Id <i class="fa fa-arrows-v pull-right"></i>
+              th
+                a(href="#") Id <i class="fa fa-arrows-v pull-right"></i>
+              th
+                a(href="#") Id <i class="fa fa-arrows-v pull-right"></i>
+              th
+                a(href="#") Id <i class="glyphicon glyphicon-arrows-v pull-right"></i>
+              th
+                | Id
+          tbody
+            | {% for i in items %}
+            tr
+              td {{ i[0] }}  
+              td {{ i[1] }}  
+              td {% if i | length > 2 %}{{ i[2] }}{% endif %} 3  
+              td <span class="glyphicon glyphicon-edit"></span>
+              td 5  
+            | {% endfor %}
+      | {% else %}
+      h3 Список пуст
+      | {% endif %}

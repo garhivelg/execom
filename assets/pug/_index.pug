@@ -1,0 +1,42 @@
+doctype html
+html
+  head
+    meta(charset="UTF-8")
+    title
+      block title
+        | Сайт{% if title %} - {{title}}{% endif %}
+    link(rel="icon", href="{{ url_for('static', filename='favicon/favicon.ico') }}")
+    link(href="{{ url_for('static', filename='css/bootstrap.min.css') }}", rel="stylesheet")
+    block style
+      | {% block style %}{% endblock %}
+  body
+    header
+      nav(class="navbar navbar-inverse navbar-fixed-top")
+        div(class="container")
+          div(class="navbar-header")
+            button(type="button", class="navbar-toggle collapsed", data-toggle="collapse", data-target="#navbar", aria-expanded="false", aria-controls="navbar")
+              span(class="sr-only") Toggle navigation
+              span(class="icon-bar")
+              span(class="icon-bar")
+              span(class="icon-bar")
+            a(class="navbar-brand", href="/")
+              block navbrand
+                | Сайт
+          div(id="navbar", class="navbar-collapse collapse")
+            block navbar
+    div(class="container")
+      | {% with messages = get_flashed_messages() %}
+      |   {% for message in messages %}
+      div(class="alert alert-info")
+        | {{ message }}
+      |   {% endfor %}
+      | {% endwith %}
+
+      div(class="row")
+        block content
+          | {% block content %}{% endblock %}
+    
+    script(src="{{ url_for('static', filename='js/jquery.min.js') }}")
+    script(src="{{ url_for('static', filename='js/bootstrap.min.js') }}")
+    block script
+      | {% block script %}{% endblock %}

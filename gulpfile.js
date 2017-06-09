@@ -57,7 +57,10 @@ gulp.task('css', ['bootstrap_css', 'dropzone_css'], function(){
 
 // Prepare pug
 gulp.task('html', function(){
-  return gulp.src('assets/pug/*.pug')
+  return gulp.src([
+    'assets/pug/*.pug',
+    '!assets/pug/_*.pug'
+  ])
     .pipe(pug({pretty: true}))
     // .pipe(on("error", console.log))
     .pipe(gulp.dest('templates'));
