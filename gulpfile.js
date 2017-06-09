@@ -1,5 +1,6 @@
 var gulp = require('gulp')
 var pug = require('gulp-pug')
+var concat = require('gulp-concat')
 var less = require('gulp-less')
 var csso = require('gulp-csso')
 
@@ -41,12 +42,7 @@ gulp.task('favicon', function(){
     .pipe(gulp.dest('static/favicon'))
 });
 
-gulp.task('html', function(){
-  return gulp.src('assets/pug/*.pug')
-    .pipe(pug())
-    .pipe(gulp.dest('templates'))
-});
-
+// Prepare css
 gulp.task('css', function(){
   return gulp.src('assets/css/*.less')
     .pipe(less())
@@ -54,6 +50,39 @@ gulp.task('css', function(){
     .pipe(gulp.dest('static/css'))
 });
 
+// Prepare pug
+gulp.task('html', function(){
+  return gulp.src('assets/pug/*.pug')
+    .pipe(pug({pretty: true}))
+    // .pipe(on("error", console.log))
+    .pipe(gulp.dest('templates'))
+});
+
+// Prepare js
+gulp.task('js', function(){
+  return gulp.src('assets/js/**/*.js')
+    .pipe(concat('index.js'))
+    .pipe(gulp.dest('static/js'))
+});
+
+// Watch for changes
+gulp.task('watch', function() {
+  gulp.run('css');
+  gulp.run('html');
+  gulp.run('js');
+
+  gulp.watch('assets/css/*.less', function() {
+    gulp.run('css');
+  });
+
+  gulp.watch('assets/pug/*.pug', function() {
+    gulp.run('html');
+  });
+
+  gulp.watch('assets/js/*.js', function() {
+    gulp.run('js');
+  });
+});
 gulp.task('bootstrap', ['bootstrap_css', 'bootstrap_js', 'bootstrap_fonts']);
 gulp.task('dropzone', ['dropzone_css', 'dropzone_js']);
 gulp.task('default', ['favicon', 'html', 'css', 'jquery', 'bootstrap', 'dropzone']);
