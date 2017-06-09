@@ -3,51 +3,56 @@ var pug = require('gulp-pug')
 var concat = require('gulp-concat')
 var less = require('gulp-less')
 var csso = require('gulp-csso')
+var del = require('del')
+
+gulp.task('clean', function() {
+  return del.sync(['static', 'templates']);
+});
 
 gulp.task('bootstrap_css', function(){
   return gulp.src([
     'assets/bower_components/bootstrap/dist/css/bootstrap.min.css',
     'assets/bower_components/bootstrap/dist/css/bootstrap-theme.min.css'
   ])
-    .pipe(gulp.dest('static/css'))
+    .pipe(gulp.dest('static/css'));
 });
 
 gulp.task('bootstrap_js', function(){
   return gulp.src('assets/bower_components/bootstrap/dist/js/bootstrap.min.js')
-    .pipe(gulp.dest('static/js'))
+    .pipe(gulp.dest('static/js'));
 });
 
 gulp.task('bootstrap_fonts', function(){
   return gulp.src('assets/bower_components/bootstrap/dist/fonts/*')
-    .pipe(gulp.dest('static/fonts'))
+    .pipe(gulp.dest('static/fonts'));
 });
 
 gulp.task('jquery', function(){
   return gulp.src('assets/bower_components/jquery/dist/jquery.min.js')
-    .pipe(gulp.dest('static/js'))
+    .pipe(gulp.dest('static/js'));
 });
 
 gulp.task('dropzone_css', function(){
   return gulp.src('assets/bower_components/dropzone/dist/min/dropzone.min.css')
-    .pipe(gulp.dest('static/css'))
+    .pipe(gulp.dest('static/css'));
 });
 
 gulp.task('dropzone_js', function(){
   return gulp.src('assets/bower_components/dropzone/dist/min/dropzone.min.js')
-    .pipe(gulp.dest('static/js'))
+    .pipe(gulp.dest('static/js'));
 });
 
 gulp.task('favicon', function(){
   return gulp.src('assets/favicon/*')
-    .pipe(gulp.dest('static/favicon'))
+    .pipe(gulp.dest('static/favicon'));
 });
 
 // Prepare css
-gulp.task('css', function(){
+gulp.task('css', ['bootstrap_css', 'dropzone_css'], function(){
   return gulp.src('assets/css/*.less')
     .pipe(less())
     .pipe(csso())
-    .pipe(gulp.dest('static/css'))
+    .pipe(gulp.dest('static/css'));
 });
 
 // Prepare pug
@@ -55,22 +60,18 @@ gulp.task('html', function(){
   return gulp.src('assets/pug/*.pug')
     .pipe(pug({pretty: true}))
     // .pipe(on("error", console.log))
-    .pipe(gulp.dest('templates'))
+    .pipe(gulp.dest('templates'));
 });
 
 // Prepare js
-gulp.task('js', function(){
+gulp.task('js', ['jquery', 'bootstrap_js', 'dropzone_js'], function(){
   return gulp.src('assets/js/**/*.js')
     .pipe(concat('index.js'))
-    .pipe(gulp.dest('static/js'))
+    .pipe(gulp.dest('static/js'));
 });
 
 // Watch for changes
-gulp.task('watch', function() {
-  gulp.run('css');
-  gulp.run('html');
-  gulp.run('js');
-
+gulp.task('watch', ['css', 'html', 'js'], function() {
   gulp.watch('assets/css/*.less', function() {
     gulp.run('css');
   });
@@ -85,4 +86,4 @@ gulp.task('watch', function() {
 });
 gulp.task('bootstrap', ['bootstrap_css', 'bootstrap_js', 'bootstrap_fonts']);
 gulp.task('dropzone', ['dropzone_css', 'dropzone_js']);
-gulp.task('default', ['favicon', 'html', 'css', 'jquery', 'bootstrap', 'dropzone']);
+gulp.task('default', ['clean', 'favicon', 'bootstrap_fonts', 'html', 'css', 'js']);
