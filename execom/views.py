@@ -1,4 +1,4 @@
-from flask import flash, render_template, redirect, jsonify, request
+from flask import flash, render_template, redirect, jsonify, request, send_file
 from flask.helpers import url_for
 from app import db, app
 from werkzeug.utils import secure_filename
@@ -153,3 +153,21 @@ def upload_decision():
         'Message': 'Ok.',
         'filenames': filenames,
     })
+
+
+@app.route("/decision/<int:decision_id>.docx")
+def export_decision(decision_id):
+    from docxtpl import DocxTemplate
+    from io import BytesIO
+
+    decision = Decision.query.get_or_404(decision_id)
+    doc = DocxTemplate(os.path.join("docx", "template.docx"))
+    doc.render({
+        'protocol': decision.protocol,
+        'decision': decision,
+    })
+    filename = "%d.docx" % (decision.id)
+    f = BytesIO()
+    doc.save(f)
+    f.seek(0)
+    return send_file(f, as_attachment=True, attachment_filename=filename)
