@@ -1,6 +1,8 @@
-from flask import flash, render_template, redirect
+from flask import flash, render_template, redirect, jsonify, request
 from flask.helpers import url_for
 from app import db, app
+from werkzeug.utils import secure_filename
+import os
 
 
 from .models import Protocol, Decision, DecisionMedia
@@ -105,3 +107,49 @@ def edit_decision(decision_id=None, protocol_id=None):
     files = DecisionMedia.query.filter_by(decision=decision).all()
 
     return render_template("edit_decision.html", form=form, decision=decision, files=files)
+
+
+@app.route("/upload/decision", methods=["POST", ])
+def upload_decision():
+    files = request.files
+    print(files)
+    if not files:
+        return jsonify({
+            'status': False,
+            'Message': 'Ни один файл не загружен.',
+        })
+
+    filenames = []
+    for k, f in files.items():
+        if not f.filename:
+            return jsonify({
+                'status': False,
+                'Message': 'Файл не загружен.',
+            })
+
+        if f:
+            name, ext = os.path.splitext(f.filename)
+            name = secure_filename(name)
+            if not name:
+                name = 'untitled'
+            filename = ''.join([name, ext])
+            version = 1
+            while True:
+                full_filename = os.path.join(app.config.get('UPLOAD_PATH', './'), filename)
+                if not os.path.isfile(full_filename):
+                    break
+                version += 1
+                filename = ''.join([name, str(version), ext])
+            f.save(full_filename)
+
+            filenames.append(filename)
+        else:
+            return jsonify({
+                'status': True,
+                'Message': "Файл %(filename)s невозможно загрузить." % ({'filename': f.filename}),
+            })
+    return jsonify({
+        'status': True,
+        'Message': 'Ok.',
+        'filenames': filenames,
+    })

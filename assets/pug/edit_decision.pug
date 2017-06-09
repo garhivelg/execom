@@ -15,7 +15,7 @@ div(class="row")
       div(id="movie-dropzone", class="dropzone")
         div(class="dropzone-previews")
         div(class="dz-message", data-dz-message)
-          span Drop image here
+          span Прикрепите файлы
       p(class="sized-field")
         | {{ form.description.label }}
         | {{ form.description(rows=5, cols=40, class="form-control") }}
@@ -30,20 +30,12 @@ script(type="text/javascript")
   | uploadMultiple: true,
   | parallelUploads: 100,
   | maxFiles: 10,
-  | url: "/upload/image/movie",
-  | acceptedFiles: "image/*",
+  | url: "/upload/decision",
+  | acceptedFiles: "image/*,.doc,.docx,.pdf,.xls,.xlsx",
   |
   | // The setting up of the dropzone
   | init: function() {
   |   var myDropzone = this;
-  |
-  |   this.hiddenFileInput.removeAttribute('multiple');
-  |
-  |   this.on("addedfile", function (file) {
-  |     if(this.files.length > 1) {
-  |       this.removeFile(this.files[0]) 
-  |     }
-  |   });
   |
   |   // Listen to the sendingmultiple event. In this case, it's the sendingmultiple event instead
   |   // of the sending event because uploadMultiple is set to true.

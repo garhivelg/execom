@@ -30,6 +30,8 @@ class Config(object):
 
     VIEW_CASE = "edit_case"
 
+    UPLOAD_PATH = os.path.join(BASE_DIR, "upload")
+
 
 class ProductionConfig(Config):
     pass
