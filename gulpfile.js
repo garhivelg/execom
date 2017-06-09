@@ -72,18 +72,11 @@ gulp.task('js', ['jquery', 'bootstrap_js', 'dropzone_js'], function(){
 
 // Watch for changes
 gulp.task('watch', ['css', 'html', 'js'], function() {
-  gulp.watch('assets/css/*.less', function() {
-    gulp.run('css');
-  });
-
-  gulp.watch('assets/pug/*.pug', function() {
-    gulp.run('html');
-  });
-
-  gulp.watch('assets/js/*.js', function() {
-    gulp.run('js');
-  });
+  gulp.watch('assets/css/*.less', ['css']);
+  gulp.watch('assets/pug/*.pug', ['html']);
+  gulp.watch('assets/js/**/*.js', ['js']);
 });
+
 gulp.task('bootstrap', ['bootstrap_css', 'bootstrap_js', 'bootstrap_fonts']);
 gulp.task('dropzone', ['dropzone_css', 'dropzone_js']);
 gulp.task('default', ['clean', 'favicon', 'bootstrap_fonts', 'html', 'css', 'js']);
