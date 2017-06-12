@@ -67,9 +67,13 @@ def edit_protocol(protocol_id=None, case_id=None):
     return render_template("edit_protocol.html", form=form, protocol=protocol, decisions=decisions)
 
 
+@app.route("/decisions/<int:protocol_id>")
 @app.route("/decisions")
-def list_decisions():
-    items = Decision.query.all()
+def list_decisions(protocol_id=None):
+    protocol = None
+    if protocol_id is not None:
+        protocol = Protocol.query.get_or_404(protocol_id)
+        items = Decision.query.filter_by(protocol=protocol)
     order = request.args.get("order", 0)
     desc = request.args.get("desc", False)
     try:
@@ -79,10 +83,11 @@ def list_decisions():
 
     return render_template(
         "list_decisions.html",
+        protocol=protocol,
         order_id=order_id,
         desc=desc,
         title="Протоколы",
-        items=items,
+        items=items.all(),
         add=url_for("edit_decision"),
     )
 
