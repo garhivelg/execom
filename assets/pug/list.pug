@@ -1,6 +1,15 @@
 extends index.pug
 
 block content
+  #confirm-del(class="modal fade", tabindex=-1, role="dialog")
+    .modal-dialog
+      .modal-content
+        .modal-header Вы уверены?
+        .modal-body ...
+        .modal-footer
+          button(type="button", class="btn btn-default", data-dismiss="modal") Отменить
+          a(class="btn btn-default btn-danger btn-ok") Удалить
+
   div(class="panel panel-primary")
     .panel-heading
       h4.panel-title 
@@ -43,9 +52,9 @@ block content
       | {% if items %}
       .table-responsive
         table(class="table table-bordered table-hover")
-          | {% if headers %}
           thead
             tr
+              th(class="col-md-1 col-lg1 col-sm-1")
               | {% for h in headers %}
               th
                 | {%if order_id==loop.index%}
@@ -64,14 +73,31 @@ block content
                   i(class="fa fa-arrows-v pull-right")
                 | {%endif%}
               | {% endfor %}
-          | {% endif %}
           tbody
             | {% for i in items %}
             tr
-              | {% for e in i %}
+              td
+                center
+                  div(class="btn-group btn-group-xs")
+                    a(href="{{i.links.show}}", class="btn btn-sm btn-primary" data-toggle="tooltip", title="Просмотреть")
+                      i(class="fa fa-search")
+                    a(href="{{i.links.edit}}", class="btn btn-sm btn-primary" data-toggle="tooltip", title="Редактировать")
+                      i(class="fa fa-edit")
+                    a(data-href="{{i.links.del}}", class="btn btn-sm btn-primary confirm" data-toggle="modal", title="Удалить", data-text="Вы уверены, что хотите удалить эту запись?", data-target="#confirm-del")
+                      i(class="fa fa-eraser")
+
+              | {% for e in i.cols %}
               td {{ e }}  
               | {% endfor %}
             | {% endfor %}
       | {% else %}
       h3 Список пуст
       | {% endif %}
+
+block script
+  script(language="javascript").
+    $('#confirm-del').on('show.bs.modal', function(e) {
+      $(this).find('.modal-body').html($(e.relatedTarget).data('text'));
+      $(this).find('.btn-ok').attr('href', $(e.relatedTarget).data('href'));
+    });
+  | {% block script %}{% endblock %}

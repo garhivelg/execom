@@ -40,13 +40,20 @@ def list_protocols():
             "Дело",
         ],
         items=[
-            [
-                "<a href=\"%s\">%s</a>" % (url_for("edit_protocol", protocol_id=i.id), i),
-                i.protocol_id,
-                i.protocol_date.strftime("%d %b %Y"),
-                i.case.register,
-                i.case.book_num,
-            ] for i in items
+            {
+                'links': {
+                    'show': url_for("edit_protocol", protocol_id=i.id),
+                    'edit': url_for("edit_protocol", protocol_id=i.id),
+                    'del': url_for("edit_protocol", protocol_id=i.id),
+                },
+                'cols': [
+                    i,
+                    i.protocol_id,
+                    i.protocol_date.strftime("%d %b %Y"),
+                    i.case.register,
+                    i.case.book_num,
+                ]
+            } for i in items
         ],
         add=url_for("edit_protocol"),
     )
