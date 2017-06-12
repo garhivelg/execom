@@ -41,11 +41,11 @@ def list_protocols():
         ],
         items=[
             [
-                str(i) + ':' + url_for("edit_protocol", protocol_id=i.id),
+                "<a href=\"%s\">%s</a>" % (url_for("edit_protocol", protocol_id=i.id), i),
                 i.protocol_id,
-                i.protocol_date,
+                i.protocol_date.strftime("%d %b %Y"),
                 i.case.register,
-                i.case,
+                i.case.book_num,
             ] for i in items
         ],
         add=url_for("edit_protocol"),

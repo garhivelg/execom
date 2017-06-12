@@ -16,7 +16,7 @@ class Protocol(db.Model):
     case = db.relationship("Case")
 
     def title(self, format="Протокол №%d от %s"):
-        return format % (self.protocol_id, self.protocol_date)
+        return format % (self.protocol_id, self.protocol_date.strftime("%x"))
 
     def __repr__(self):
         return self.title()
