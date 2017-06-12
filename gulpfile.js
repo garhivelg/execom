@@ -42,13 +42,25 @@ gulp.task('dropzone_js', function(){
     .pipe(gulp.dest('static/js'));
 });
 
+gulp.task('fa_css', function(){
+  return gulp.src('assets/bower_components/components-font-awesome/css/font-awesome.min.css')
+    .pipe(gulp.dest('static/css'));
+});
+
+gulp.task('fa_fonts', function(){
+  return gulp.src('assets/bower_components/components-font-awesome/fonts/*')
+    .pipe(gulp.dest('static/fonts'));
+});
+
 gulp.task('favicon', function(){
   return gulp.src('assets/favicon/*')
     .pipe(gulp.dest('static/favicon'));
 });
 
+gulp.task('fonts', ['bootstrap_fonts', 'fa_fonts']);
+
 // Prepare css
-gulp.task('css', ['bootstrap_css', 'dropzone_css'], function(){
+gulp.task('css', ['bootstrap_css', 'dropzone_css', 'fa_css'], function(){
   return gulp.src('assets/css/*.less')
     .pipe(less())
     .pipe(csso())
@@ -74,7 +86,7 @@ gulp.task('js', ['jquery', 'bootstrap_js', 'dropzone_js'], function(){
 });
 
 // Watch for changes
-gulp.task('watch', ['css', 'html', 'js'], function() {
+gulp.task('watch', ['fonts', 'css', 'html', 'js'], function() {
   gulp.watch('assets/css/*.less', ['css']);
   gulp.watch('assets/pug/*.pug', ['html']);
   gulp.watch('assets/js/**/*.js', ['js']);
@@ -82,4 +94,5 @@ gulp.task('watch', ['css', 'html', 'js'], function() {
 
 gulp.task('bootstrap', ['bootstrap_css', 'bootstrap_js', 'bootstrap_fonts']);
 gulp.task('dropzone', ['dropzone_css', 'dropzone_js']);
-gulp.task('default', ['clean', 'favicon', 'bootstrap_fonts', 'html', 'css', 'js']);
+gulp.task('fa', ['fa_css', 'fa_fonts']);
+gulp.task('default', ['clean', 'favicon', 'fonts', 'html', 'css', 'js']);
