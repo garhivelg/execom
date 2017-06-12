@@ -20,13 +20,32 @@ def index():
 @app.route("/protocols")
 def list_protocols():
     items = Protocol.query.all()
+    order = request.args.get("order", 0)
+    desc = request.args.get("desc", False)
+    try:
+        order_id = int(order)
+    except ValueError:
+        order_id = 0
 
     return render_template(
         "list.html",
+        order_id=order_id,
+        desc=desc,
+        title="Протоколы",
+        headers=[
+            "Протокол",
+            "№",
+            "Дата",
+            "Опись",
+            "Дело",
+        ],
         items=[
             [
-                i,
-                url_for("edit_protocol", protocol_id=i.id)
+                str(i) + ':' + url_for("edit_protocol", protocol_id=i.id),
+                i.protocol_id,
+                i.protocol_date,
+                i.case.register,
+                i.case,
             ] for i in items
         ],
         add=url_for("edit_protocol"),
