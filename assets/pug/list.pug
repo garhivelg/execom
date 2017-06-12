@@ -11,14 +11,29 @@ block content
       div(class="panel panel-default")
         .panel-heading
           h4.panel-title 
-            a(class="acordion-toggle", href="#accordion1_href") Search <span class="caret"></span>
+            a(class="acordion-toggle", href="#accordion1_href", data-toggle="collapse", data-parent="#accordion1") Search <span class="caret"></span>
         div(id="accordion1_href", class="panel-collapse collapse")
-          div(class="btn-toolbar")
-            a(href="{{ add }}", class="btn btn-default") <span class="glyphicon glyphicon-plus"></span> Добавить
+          div(class="panel-body")
+            form(id="filter_form", class="form-search", method="get")
+              .btn-group
+                button(type="button", class="btn btn-default dropdown-toggle", data-toggle="dropdown") Добавить Фильтр <span class="caret"></span>
+                ul.dropdown-menu
+                  li
+                    a(href="#", name="protocol", class"filter btn") Протокол
+                  li
+                    a(href="#", name="record", class"filter btn") Опись
+                  li
+                    a(href="#", name="case", class"filter btn") Дело
+              table(class="table table-responsive table-hover filters")
+              button(type="submit", class="btn btn-sm btn-primary") <span class="glyphicon glyphicon-plus"></span> Искать <i class="fa fa-search"></i>
+               
     | {% endif %}
     div
       div(class="well well-sm")
-        a(href="#", class="btn btn-sm btn-primary") <i class="glyphicon glyphicon-edit"></i>
+        | &nbsp;
+        | &nbsp;
+        a(href="#", class="btn btn-sm btn-primary") <i class="fa fa-arrow-left"></i>
+        | &nbsp;
         a(href="{{ add }}", class="btn btn-default") <span class="glyphicon glyphicon-plus"></span> Добавить
         .pull-right
           strong Количество: 
@@ -29,19 +44,19 @@ block content
           thead
             tr
               th
-                a(href="#") Id <i class="fa fa-arrows-v pull-right"></i>
+                a(href="#") Протокол <i class="fa fa-arrows-v pull-right"></i>
               th
-                a(href="#") Id <i class="fa fa-arrows-v pull-right"></i>
+                a(href="#") № <i class="fa fa-arrows-v pull-right"></i>
               th
-                a(href="#") Id <i class="fa fa-arrows-v pull-right"></i>
+                a(href="#") Дата <i class="fa fa-arrows-v pull-right"></i>
               th
-                a(href="#") Id <i class="glyphicon glyphicon-arrows-v pull-right"></i>
+                a(href="#") Опись <i class="fa fa-arrows-v pull-right"></i>
               th
-                | Id
+                | Дело
           tbody
             | {% for i in items %}
             tr
-              td {{ i[0] }}  
+              td <span class="glyphicon glyphicon-edit"></span> {{ i[0] }} ({{ i[1] }}) [{% for e in i %}{{e}}, {% endfor %}] 
               td {{ i[1] }}  
               td {% if i | length > 2 %}{{ i[2] }}{% endif %} 3  
               td <span class="glyphicon glyphicon-edit"></span>
