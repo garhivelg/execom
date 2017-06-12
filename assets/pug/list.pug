@@ -39,13 +39,27 @@ block content
     | {% endif %}
     div
       div(class="well well-sm")
+        | {% if items.pages %}
+        ul(class="pagination pagination-sm")
+          li(class="{% if not items.has_prev %}disabled{% endif %}")
+            a(href="?page={{ items.prev_num }}")
+              span(class="glyphicon glyphicon-menu-left")
+          | {%- for page in items.iter_pages() %}
+          | {% if page %}
+          li(class="{% if page == items.page %}active{% endif %}")
+            a(href="?page={{ page }}") {{ page }}
+          | {% else %}
+          li
+            span(class=ellipsis) …
+          | {% endif %}
+          | {%- endfor %}
+          li(class="{% if not items.has_next %}disabled{% endif %}")
+            a(href="?page={{ items.next_num }}")
+              span(class="glyphicon glyphicon-menu-right")
+        | {% endif %}
         | &nbsp;
-        | &nbsp;
-        a(href="#", class="btn btn-sm btn-primary") <i class="fa fa-arrow-left"></i>
-        | &nbsp;
-        a(href="{{ add }}", class="btn btn-default") <span class="glyphicon glyphicon-plus"></span> Добавить
-        | &nbsp;
-        a(href="{{ add }}", class="btn btn-default") <span class="glyphicon glyphicon-edit"></span> Добавить
+        a(href="{{ add }}", class="btn btn-sm btn-primary", data-toggle="tooltip", title="Добавить") <i class="fa fa-plus"></i>
+
         .pull-right
           strong Количество: 
           | {{ items | count }}
