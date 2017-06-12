@@ -70,15 +70,19 @@ def edit_protocol(protocol_id=None, case_id=None):
 @app.route("/decisions")
 def list_decisions():
     items = Decision.query.all()
+    order = request.args.get("order", 0)
+    desc = request.args.get("desc", False)
+    try:
+        order_id = int(order)
+    except ValueError:
+        order_id = 0
 
     return render_template(
-        "list.html",
-        items=[
-            [
-                i,
-                url_for("edit_decision", decision_id=i.id)
-            ] for i in items
-        ],
+        "list_decisions.html",
+        order_id=order_id,
+        desc=desc,
+        title="Протоколы",
+        items=items,
         add=url_for("edit_decision"),
     )
 
