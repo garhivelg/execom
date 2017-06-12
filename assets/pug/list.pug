@@ -14,7 +14,7 @@ block content
     .panel-heading
       h4.panel-title 
         block panel_head
-          | {{ title }}
+          | Справочник
     | {% if add %}
     .panel-group#accordion1
       div(class="panel panel-default")
@@ -52,43 +52,19 @@ block content
       | {% if items %}
       .table-responsive
         table(class="table table-bordered table-hover")
-          thead
-            tr
-              th(class="col-md-1 col-lg1 col-sm-1")
-              | {% for h in headers %}
-              th
-                | {%if order_id==loop.index%}
-                | {%if desc%}
-                a(href="?order={{loop.index}}&desc=") 
-                  | {{h}} 
-                  i(class="fa fa-chevron-up pull-right")
-                | {%else%}
-                a(href="?order={{loop.index}}&desc=1") 
-                  | {{h}} 
-                  i(class="fa fa-chevron-down pull-right")
-                | {%endif%}
-                | {%else%}
-                a(href="?order={{loop.index}}") 
-                  | {{h}} 
-                  i(class="fa fa-arrows-v pull-right")
-                | {%endif%}
-              | {% endfor %}
+          block table_headers
+
           tbody
             | {% for i in items %}
             tr
-              td
-                center
-                  div(class="btn-group btn-group-xs")
-                    a(href="{{i.links.show}}", class="btn btn-sm btn-primary" data-toggle="tooltip", title="Просмотреть")
-                      i(class="fa fa-search")
-                    a(href="{{i.links.edit}}", class="btn btn-sm btn-primary" data-toggle="tooltip", title="Редактировать")
-                      i(class="fa fa-edit")
-                    a(data-href="{{i.links.del}}", class="btn btn-sm btn-primary confirm" data-toggle="modal", title="Удалить", data-text="Вы уверены, что хотите удалить эту запись?", data-target="#confirm-del")
-                      i(class="fa fa-eraser")
+              block row_controls
 
-              | {% for e in i.cols %}
-              td {{ e }}  
-              | {% endfor %}
+              block row_data
+                td 
+                  a(href="{{ i[1] }}") {{ i[0] }}  
+                  | {% if i|length > 2 %}
+                  a(href="{{ i[2] }}") <i class="fa fa-edit"></i>  
+                  | {% endif %}
             | {% endfor %}
       | {% else %}
       h3 Список пуст

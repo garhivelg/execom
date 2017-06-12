@@ -28,33 +28,11 @@ def list_protocols():
         order_id = 0
 
     return render_template(
-        "list.html",
+        "list_protocols.html",
         order_id=order_id,
         desc=desc,
         title="Протоколы",
-        headers=[
-            "Протокол",
-            "№",
-            "Дата",
-            "Опись",
-            "Дело",
-        ],
-        items=[
-            {
-                'links': {
-                    'show': url_for("edit_protocol", protocol_id=i.id),
-                    'edit': url_for("edit_protocol", protocol_id=i.id),
-                    'del': url_for("edit_protocol", protocol_id=i.id),
-                },
-                'cols': [
-                    i,
-                    i.protocol_id,
-                    i.protocol_date.strftime("%d %b %Y"),
-                    i.case.register,
-                    i.case.book_num,
-                ]
-            } for i in items
-        ],
+        items=items,
         add=url_for("edit_protocol"),
     )
 
