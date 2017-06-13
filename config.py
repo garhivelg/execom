@@ -1,10 +1,15 @@
 import os
 from datetime import timedelta
+import locale
 
 
 # BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 BASE_DIR = os.path.abspath(os.getcwd())
 
+try:
+    locale.setlocale(locale.LC_ALL, 'russian')
+except locale.Error:
+    locale.setlocale(locale.LC_ALL, 'ru_RU.utf8')
 
 class Config(object):
     DEBUG = False
