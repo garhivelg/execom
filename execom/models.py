@@ -13,13 +13,18 @@ class Protocol(db.Model):
     description = db.Column(db.UnicodeText, info={'label': "Описание"})
     protocol_date = db.Column(db.Date, info={'label': "Дата"})
 
-    case = db.relationship("Case")
+    case = db.relationship("Case", backref="protocols")
+    decisions = db.relationship("Decision", backref="protocol")
 
     def title(self, format="Протокол №%d от %s"):
         return format % (self.protocol_id, self.protocol_date.strftime("%x"))
 
     def __repr__(self):
         return self.title()
+
+    @property
+    def decisions_count(self):
+        return len(self.decisions)
 
 
 class Decision(db.Model):
@@ -35,7 +40,7 @@ class Decision(db.Model):
     topic = db.Column(db.String(256), info={'label': "Тема"})
     description = db.Column(db.UnicodeText, info={'label': "Описание"})
 
-    protocol = db.relationship("Protocol")
+    # protocol = db.relationship("Protocol")
 
     def title(self, format="%s Решение №%s \"%s\""):
         return format % (self.protocol, self.decision_id, self.topic)

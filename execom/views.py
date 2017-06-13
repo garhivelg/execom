@@ -19,6 +19,7 @@ def index():
 
 @app.route("/protocols")
 def list_protocols():
+    # items = db.session.query(Protocol, db.func.count(Protocol.decisions)).all()
     items = Protocol.query.all()
     order = request.args.get("order", 0)
     desc = request.args.get("desc", False)
@@ -27,6 +28,7 @@ def list_protocols():
     except ValueError:
         order_id = 0
 
+    print(items)
     return render_template(
         "list_protocols.html",
         order_id=order_id,
@@ -71,9 +73,10 @@ def edit_protocol(protocol_id=None, case_id=None):
 @app.route("/decisions")
 def list_decisions(protocol_id=None):
     protocol = None
+    items = Decision.query
     if protocol_id is not None:
         protocol = Protocol.query.get_or_404(protocol_id)
-        items = Decision.query.filter_by(protocol=protocol)
+        items = items.filter_by(protocol=protocol)
     order = request.args.get("order", 0)
     desc = request.args.get("desc", False)
     try:

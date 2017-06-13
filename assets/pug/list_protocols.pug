@@ -1,4 +1,4 @@
-extends list.pug
+extends _list.pug
 
 block panel_head
   | Протоколы
@@ -57,6 +57,16 @@ block table_headers
           | Дело 
           i(class="fa fa-arrows-v pull-right")
         | {%endif%}
+      th
+        | {%if order_id==5%}
+        a(href="?order=5{% if not desc %}&desc={{desc}}{% endif %}") 
+          | Решений 
+          i(class="fa fa-chevron-{% if desc %}up{% else %}down{% endif %} pull-right")
+        | {%else%}
+        a(href="?order=5") 
+          | Решений
+          i(class="fa fa-arrows-v pull-right")
+        | {%endif%}
 
 block row_controls
   td
@@ -76,4 +86,5 @@ block row_data
     a(href="{{ url_for('edit_register', register_id=i.case.register_id) }}") {{ i.case.register }}  
   td  
     a(href="{{ url_for('edit_case', case_id=i.case.id) }}") {{ i.case.book_num }}  
+  td {{ i.decisions_count }}
 
