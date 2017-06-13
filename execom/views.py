@@ -9,7 +9,7 @@ from .models import Protocol, Decision, DecisionMedia
 from .forms import ProtocolForm, DecisionForm
 
 
-from case.models import Case
+from case.models import Case, Register
 
 
 def page():
@@ -29,13 +29,26 @@ def index():
 @app.route("/protocols")
 def list_protocols():
     # items = db.session.query(Protocol, db.func.count(Protocol.decisions)).all()
-    items = Protocol.query.paginate(page(), app.config.get('RECORDS_ON_PAGE'))
     order = request.args.get("order", 0)
     desc = request.args.get("desc", False)
     try:
         order_id = int(order)
     except ValueError:
         order_id = 0
+    orders = {
+        1: [Protocol.id.asc(), ],
+        2: [Protocol.protocol_id.asc(), ],
+        3: [Protocol.protocol_date.asc(), ],
+        4: [Register.fund.asc(), Register.register.asc()],
+        5: [Case.book_num.asc(), ],
+    }
+    order = orders.get(order_id)
+    print("ORDER", order)
+
+    items = Protocol.query.join(Protocol.case).join(Case.register)
+    if order is not None:
+        items = items.order_by(*order)
+    items = items.paginate(page(), app.config.get('RECORDS_ON_PAGE'))
 
     return render_template(
         "list_protocols.html",

@@ -46,6 +46,7 @@ class Decision(db.Model):
     )
     decision_num = db.Column(db.Integer, nullable=False, default=0)
     topic = db.Column(db.String(256), info={'label': "Тема"})
+    decision_date = db.Column(db.Date, info={'label': "Дата"})
     description = db.Column(db.UnicodeText, info={'label': "Описание"})
 
     # protocol = db.relationship("Protocol")
@@ -56,9 +57,19 @@ class Decision(db.Model):
     def __repr__(self):
         return self.title()
 
+    @property
+    def date(self):
+        if self.decision_date is not None:
+            return self.decision_date
+        else:
+            return self.protocol.protocol_date
+
     def randomize(self, fake):
         self.decision_num = fake.pyint()
         self.topic = fake.sentence()
+        chance = random.randint(0, 100)
+        if chance < 10:
+            self.decision_date = fake.past_date(start_date="-20y")
         chance = random.randint(0, 100)
         if chance < 25:
             self.description = "\n".join(fake.paragraphs())
