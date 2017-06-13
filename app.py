@@ -1,6 +1,7 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
+from flask_script import Manager
 from config import app_config
 
 
@@ -44,7 +45,9 @@ import os
 debug = os.environ.get('FLASK_DEBUG', False)
 config_name = os.environ.get('FLASK_CONFIG', 'production')
 app, db = create_app(config_name=config_name)
+manager = Manager(app)
 
 
+from execom.commands import *
 from execom.views import *
 from case.views import *

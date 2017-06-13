@@ -1,4 +1,5 @@
 from app import db
+import random
 
 
 class Protocol(db.Model):
@@ -26,6 +27,13 @@ class Protocol(db.Model):
     def decisions_count(self):
         return len(self.decisions)
 
+    def randomize(self, fake):
+        self.protocol_id = fake.pyint()
+        self.protocol_date = fake.past_date(start_date="-20y")
+        chance = random.randint(0, 100)
+        if chance < 25:
+            self.description = "\n".join(fake.paragraphs())
+
 
 class Decision(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -47,6 +55,13 @@ class Decision(db.Model):
 
     def __repr__(self):
         return self.title()
+
+    def randomize(self, fake):
+        self.decision_num = fake.pyint()
+        self.topic = fake.sentence()
+        chance = random.randint(0, 100)
+        if chance < 25:
+            self.description = "\n".join(fake.paragraphs())
 
 
 class DecisionMedia(db.Model):

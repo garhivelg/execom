@@ -1,11 +1,5 @@
 #! /usr/bin/env python
-from flask_script import Manager
-
-
-from app import app
-
-
-manager = Manager(app)
+from app import manager
 
 
 if __name__ == '__main__':
