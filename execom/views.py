@@ -12,6 +12,15 @@ from .forms import ProtocolForm, DecisionForm
 from case.models import Case
 
 
+def page():
+    page_str = request.args.get('page')
+    try:
+        page = int(page_str)
+    except (ValueError, TypeError):
+        page = 1
+    return page
+
+
 @app.route("/")
 def index():
     return redirect(url_for("list_protocols"))
@@ -20,7 +29,7 @@ def index():
 @app.route("/protocols")
 def list_protocols():
     # items = db.session.query(Protocol, db.func.count(Protocol.decisions)).all()
-    items = Protocol.query.all()
+    items = Protocol.query.paginate(page(), app.config.get('RECORDS_ON_PAGE'))
     order = request.args.get("order", 0)
     desc = request.args.get("desc", False)
     try:
@@ -28,7 +37,6 @@ def list_protocols():
     except ValueError:
         order_id = 0
 
-    print(items)
     return render_template(
         "list_protocols.html",
         order_id=order_id,
@@ -56,9 +64,9 @@ def edit_protocol(protocol_id=None, case_id=None):
         form.populate_obj(protocol)
         db.session.add(protocol)
         if protocol.id:
-            flash("Протокол изменен")
+            flash("Протокол изменен", 'success')
         else:
-            flash("Протокол добавлен")
+            flash("Протокол добавлен", 'success')
         db.session.commit()
         return redirect(url_for("list_protocols"))
 
@@ -69,7 +77,16 @@ def edit_protocol(protocol_id=None, case_id=None):
     return render_template("edit_protocol.html", form=form, protocol=protocol, decisions=decisions)
 
 
-@app.route("/decisions/<int:protocol_id>")
+@app.route("/protocol/del/<int:protocol_id>")
+def del_protocol(protocol_id=None):
+    protocol = Protocol.query.get_or_404(protocol_id)
+    db.session.delete(protocol)
+    db.session.commit()
+    flash("Протокол удален", 'danger')
+    return redirect(url_for("list_protocols"))
+
+
+@app.route("/protocol/<int:protocol_id>")
 @app.route("/decisions")
 def list_decisions(protocol_id=None):
     protocol = None
@@ -90,7 +107,7 @@ def list_decisions(protocol_id=None):
         order_id=order_id,
         desc=desc,
         title="Протоколы",
-        items=items.all(),
+        items=items.paginate(page(), app.config.get('RECORDS_ON_PAGE')),
         add=url_for("edit_decision"),
     )
 
@@ -112,9 +129,9 @@ def edit_decision(decision_id=None, protocol_id=None):
         form.populate_obj(decision)
         db.session.add(decision)
         if decision.id:
-            flash("Решение изменено")
+            flash("Решение изменено", 'success')
         else:
-            flash("Решение добавлено")
+            flash("Решение добавлено", 'success')
         db.session.commit()
         return redirect(url_for("list_protocols"))
 
@@ -123,6 +140,15 @@ def edit_decision(decision_id=None, protocol_id=None):
     files = DecisionMedia.query.filter_by(decision=decision).all()
 
     return render_template("edit_decision.html", form=form, decision=decision, files=files)
+
+
+@app.route("/decision/del/<int:decision_id>")
+def del_decision(decision_id=None):
+    decision = Decision.query.get_or_404(decision_id)
+    db.session.delete(decision)
+    db.session.commit()
+    flash("Решение удалено", 'danger')
+    return redirect(url_for("list_decisions"))
 
 
 @app.route("/upload/decision", methods=["POST", ])

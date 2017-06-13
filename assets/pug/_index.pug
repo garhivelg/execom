@@ -26,9 +26,18 @@ html
           div(id="navbar", class="navbar-collapse collapse")
             block navbar
     div(class="container")
-      | {% with messages = get_flashed_messages() %}
-      |   {% for message in messages %}
-      div(class="alert alert-info")
+      #confirm-del(class="modal fade", tabindex=-1, role="dialog")
+        .modal-dialog
+          .modal-content
+            .modal-header Вы уверены?
+            .modal-body ...
+            .modal-footer
+              button(type="button", class="btn btn-default", data-dismiss="modal") Отменить
+              a(class="btn btn-default btn-danger btn-ok") Удалить
+
+      | {% with messages = get_flashed_messages(with_categories=True) %}
+      |   {% for category, message in messages %}
+      div(class="alert alert-{{category}}")
         | {{ message }}
       |   {% endfor %}
       | {% endwith %}

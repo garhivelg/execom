@@ -1,15 +1,6 @@
-extends index.pug
+extends _execom.pug
 
 block content
-  #confirm-del(class="modal fade", tabindex=-1, role="dialog")
-    .modal-dialog
-      .modal-content
-        .modal-header Вы уверены?
-        .modal-body ...
-        .modal-footer
-          button(type="button", class="btn btn-default", data-dismiss="modal") Отменить
-          a(class="btn btn-default btn-danger btn-ok") Удалить
-
   block panel_master
 
   div(class="panel panel-primary")
@@ -42,7 +33,7 @@ block content
     div
       div(class="well well-sm")
         | {% if items.pages %}
-        ul(class="pagination pagination-sm")
+        ul(class="pagination pagination-sm", style="display:inherit;")
           li(class="{% if not items.has_prev %}disabled{% endif %}")
             a(href="?page={{ items.prev_num }}")
               span(class="glyphicon glyphicon-menu-left")
@@ -64,14 +55,14 @@ block content
 
         .pull-right
           strong Количество: 
-          | {{ items | count }}
+          | {{ items.total }}
       | {% if items %}
       .table-responsive
         table(class="table table-bordered table-hover")
           block table_headers
 
           tbody
-            | {% for i in items %}
+            | {% for i in items.items %}
             tr
               block row_controls
 
@@ -85,11 +76,3 @@ block content
       | {% else %}
       h3 Список пуст
       | {% endif %}
-
-block script
-  script(language="javascript").
-    $('#confirm-del').on('show.bs.modal', function(e) {
-      $(this).find('.modal-body').html($(e.relatedTarget).data('text'));
-      $(this).find('.btn-ok').attr('href', $(e.relatedTarget).data('href'));
-    });
-  | {% block script %}{% endblock %}

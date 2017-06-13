@@ -11,6 +11,7 @@ try:
 except locale.Error:
     locale.setlocale(locale.LC_ALL, 'ru_RU.utf8')
 
+
 class Config(object):
     DEBUG = False
     TESTING = False
@@ -36,6 +37,8 @@ class Config(object):
     VIEW_CASE = "edit_case"
 
     UPLOAD_PATH = os.path.join(BASE_DIR, "upload")
+
+    RECORDS_ON_PAGE = 50
 
 
 class ProductionConfig(Config):

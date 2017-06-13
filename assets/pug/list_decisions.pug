@@ -17,7 +17,7 @@ block panel_master
       | {% if protocol.description %}
       | {{ protocol.description }}
       | {% else %}
-      | <strong>Решений:</strong> {{ items| length }}
+      | <strong>Решений:</strong> {{ items.total}}
       | {% endif %}
   | {% endif %}
 
