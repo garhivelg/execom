@@ -22,7 +22,7 @@ block panel_master
   | {% endif %}
 
 block panel_head
-  | Дела
+  | Описи
 
 block table_headers
   thead
@@ -73,5 +73,5 @@ block row_controls
 block row_data
   td {{ i.fund }}  
   td {{ i.register }}  
-  td {{ i }}  
+  td {{ i.cases|length }}  
 
