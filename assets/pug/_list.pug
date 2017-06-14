@@ -35,19 +35,19 @@ block content
         | {% if items.pages %}
         ul(class="pagination pagination-sm", style="display:inherit;")
           li(class="{% if not items.has_prev %}disabled{% endif %}")
-            a(href="?page={{ items.prev_num }}")
+            a(href="?order={{order_id}}{% if desc %}&desc=1{% endif %}&page={{ items.prev_num }}")
               span(class="glyphicon glyphicon-menu-left")
           | {%- for page in items.iter_pages() %}
           | {% if page %}
           li(class="{% if page == items.page %}active{% endif %}")
-            a(href="?page={{ page }}") {{ page }}
+            a(href="?order={{order_id}}{% if desc %}&desc=1{% endif %}&page={{ page }}") {{ page }}
           | {% else %}
           li
             span(class=ellipsis) …
           | {% endif %}
           | {%- endfor %}
           li(class="{% if not items.has_next %}disabled{% endif %}")
-            a(href="?page={{ items.next_num }}")
+            a(href="?order={{order_id}}{% if desc %}&desc=1{% endif %}&page={{ items.next_num }}")
               span(class="glyphicon glyphicon-menu-right")
         | {% endif %}
         | &nbsp;

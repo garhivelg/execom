@@ -21,6 +21,29 @@ def page():
     return page
 
 
+def get_order():
+    desc = request.args.get("desc", False)
+    try:
+        order_id = int(request.args.get("order", 0))
+    except ValueError:
+        order_id = 0
+    return order_id, desc
+
+
+def order(q, fieldlist=None, desc=False):
+    print("ORDER", fieldlist)
+    if fieldlist is None:
+        return q
+
+    orderlist = []
+    for f in fieldlist:
+        if desc:
+            orderlist.append(f.desc())
+        else:
+            orderlist.append(f.asc())
+    return q.order_by(*orderlist)
+
+
 @app.route("/")
 def index():
     return redirect(url_for("list_protocols"))
@@ -28,27 +51,24 @@ def index():
 
 @app.route("/protocols")
 def list_protocols():
-    # items = db.session.query(Protocol, db.func.count(Protocol.decisions)).all()
-    order = request.args.get("order", 0)
-    desc = request.args.get("desc", False)
-    try:
-        order_id = int(order)
-    except ValueError:
-        order_id = 0
+    order_id, desc = get_order()
     orders = {
-        1: [Protocol.id.asc(), ],
-        2: [Protocol.protocol_id.asc(), ],
-        3: [Protocol.protocol_date.asc(), ],
-        4: [Register.fund.asc(), Register.register.asc()],
-        5: [Case.book_num.asc(), ],
+        1: [Protocol.protocol_id, ],
+        2: [Protocol.protocol_date, ],
+        3: [Register.fund, Register.register],
+        4: [Case.book_num, ],
     }
-    order = orders.get(order_id)
-    print("ORDER", order)
 
-    items = Protocol.query.join(Protocol.case).join(Case.register)
-    if order is not None:
-        items = items.order_by(*order)
+    items = db.session.query(Protocol, db.func.count(Protocol.decisions).label('decision_count'))
+    items = items.join(Protocol.case).join(Case.register)
+    items = items.join(Protocol.decisions).group_by(Protocol)
+    if order_id == 5:
+        desc_text = " DESC" if desc else " ASC"
+        items = items.order_by(db.text("\"decision_count\"%s" % (desc_text, )))
+    else:
+        items = order(items, orders.get(order_id), desc)
     items = items.paginate(page(), app.config.get('RECORDS_ON_PAGE'))
+    print(items)
 
     return render_template(
         "list_protocols.html",
@@ -102,17 +122,21 @@ def del_protocol(protocol_id=None):
 @app.route("/protocol/<int:protocol_id>")
 @app.route("/decisions")
 def list_decisions(protocol_id=None):
+    order_id, desc = get_order()
+    orders = {
+        1: [Decision.decision_num, ],
+        2: [Protocol.protocol_date, Decision.decision_date, ],
+        3: [Decision.topic, ],
+        4: [Protocol.protocol_id, ],
+    }
+
     protocol = None
     items = Decision.query
     if protocol_id is not None:
         protocol = Protocol.query.get_or_404(protocol_id)
         items = items.filter_by(protocol=protocol)
-    order = request.args.get("order", 0)
-    desc = request.args.get("desc", False)
-    try:
-        order_id = int(order)
-    except ValueError:
-        order_id = 0
+    items = items.join(Protocol)
+    items = order(items, orders.get(order_id), desc)
 
     return render_template(
         "list_decisions.html",
