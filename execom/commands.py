@@ -28,6 +28,7 @@ def fill():
             case.randomize(fake)
             case.register = register
 
+            print("\tRecord#%d of %d: %s" % (register_id, registers, register))
             print("\tCase#%d of %d: %s" % (case_id, cases, case))
             db.session.add(case)
             db.session.commit()
@@ -38,6 +39,8 @@ def fill():
                 protocol.randomize(fake)
                 protocol.case = case
 
+                print("\t\tRecord#%d of %d: %s" % (register_id, registers, register))
+                print("\t\tCase#%d of %d: %s" % (case_id, cases, case))
                 print("\t\tProtocol#%d of %d: %s" % (protocol_id, protocols, protocol))
                 db.session.add(protocol)
                 db.session.commit()
@@ -48,6 +51,9 @@ def fill():
                     decision.randomize(fake)
                     decision.protocol = protocol
 
+                    print("\t\t\tRecord#%d of %d: %s" % (register_id, registers, register))
+                    print("\t\t\tCase#%d of %d: %s" % (case_id, cases, case))
+                    print("\t\t\tProtocol#%d of %d: %s" % (protocol_id, protocols, protocol))
                     print("\t\t\tDecision#%d of %d: %s" % (decision_id, decisions, decision))
                     db.session.add(decision)
                     db.session.commit()
