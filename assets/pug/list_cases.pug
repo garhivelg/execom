@@ -64,7 +64,7 @@ block table_headers
           i(class="fa fa-arrows-v pull-right")
         | {%endif%}
 
-block row_controls
+block row
   td
     center
       div(class="btn-group btn-group-xs")
@@ -74,7 +74,5 @@ block row_controls
           i(class="fa fa-edit")
         a(data-href="{{ url_for('del_case', case_id=i.id) }}", class="btn btn-sm btn-primary confirm" data-toggle="modal", title="Удалить", data-text="Вы уверены, что хотите удалить эту запись?", data-target="#confirm-del")
           i(class="fa fa-eraser")
-
-block row_data
   td {{ i.book_num }}  
   td {{ i.register }}

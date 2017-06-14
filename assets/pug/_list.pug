@@ -64,9 +64,7 @@ block content
           tbody
             | {% for i in items.items %}
             tr
-              block row_controls
-
-              block row_data
+              block row
                 td 
                   a(href="{{ i[1] }}") {{ i[0] }}  
                   | {% if i|length > 2 %}
