@@ -6,7 +6,7 @@
   "scripts": {
     "preinstall": "git pull && pip install -r requirements.txt && flask db upgrade && bower install",
     "prestart": "gulp",
-    "start": "./manage.py runserver",
+    "start": "python manage.py runserver",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
