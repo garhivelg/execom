@@ -60,13 +60,14 @@ def list_protocols():
     }
 
     items = db.session.query(Protocol, db.func.count(Protocol.decisions).label('decision_count'))
-    items = items.join(Protocol.case).join(Case.register)
-    items = items.join(Protocol.decisions).group_by(Protocol)
+    items = items.outerjoin(Protocol.case).outerjoin(Case.register)
+    items = items.outerjoin(Protocol.decisions).group_by(Protocol)
     if order_id == 5:
         desc_text = " DESC" if desc else " ASC"
         items = items.order_by(db.text("\"decision_count\"%s" % (desc_text, )))
     else:
         items = order(items, orders.get(order_id), desc)
+    app.logger.debug(items)
     items = items.paginate(page(), app.config.get('RECORDS_ON_PAGE'))
     print(items)
 
@@ -135,6 +136,9 @@ def list_decisions(protocol_id=None):
     if protocol_id is not None:
         protocol = Protocol.query.get_or_404(protocol_id)
         items = items.filter_by(protocol=protocol)
+        add = url_for("edit_decision", protocol_id=protocol.id)
+    else:
+        add = url_for("edit_decision")
     items = items.join(Protocol)
     items = order(items, orders.get(order_id), desc)
 
@@ -145,7 +149,7 @@ def list_decisions(protocol_id=None):
         desc=desc,
         title="Протоколы",
         items=items.paginate(page(), app.config.get('RECORDS_ON_PAGE')),
-        add=url_for("edit_decision"),
+        add=add,
     )
 
 
@@ -157,6 +161,8 @@ def edit_decision(decision_id=None, protocol_id=None):
         protocol = Protocol.query.get_or_404(protocol_id)
         decision = Decision(protocol=protocol)
     elif decision_id is not None:
+        app.logger.debug(decision_id)
+        app.logger.debug([d.id for d in Decision.query.all()])
         decision = Decision.query.get_or_404(decision_id)
     else:
         decision = Decision()
@@ -174,8 +180,12 @@ def edit_decision(decision_id=None, protocol_id=None):
 
     app.logger.debug(form.errors)
 
-    files = DecisionMedia.query.filter_by(decision=decision).all()
+    if decision.id:
+        files = DecisionMedia.query.filter_by(decision=decision).all()
+    else:
+        files = []
 
+    app.logger.debug("DECISON (%s %s)", decision.id, decision)
     return render_template("edit_decision.html", form=form, decision=decision, files=files)
 
 
