@@ -130,7 +130,7 @@ def del_protocol(protocol_id=None):
 def list_decisions(protocol_id=None):
     order_id, desc = get_order()
     orders = {
-        1: [Decision.decision_num, ],
+        1: [Decision.decision_id, ],
         2: [Protocol.protocol_date, Decision.decision_date, ],
         3: [Decision.topic, ],
         4: [Protocol.protocol_id, ],
