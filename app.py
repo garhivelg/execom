@@ -2,7 +2,7 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_script import Manager
-from config import app_config
+from config import BASE_DIR, app_config
 
 
 import logging
@@ -23,6 +23,8 @@ def create_logger(log_config=dict()):
 def create_app(debug=False, config_name='production'):
     app = Flask(__name__)
     app.config.from_object(app_config[config_name])
+    app.static_folder = os.path.join(BASE_DIR, app.config.get('STATIC_FOLDER', 'static'))
+    app.template_folder = os.path.join(BASE_DIR, app.config.get('TEMPLATE_FOLDER', 'templates'))
 
     # Session(app)
 

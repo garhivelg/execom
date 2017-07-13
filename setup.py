@@ -4,7 +4,9 @@ https://packaging.python.org/en/latest/distributing.html
 https://github.com/pypa/sampleproject
 """
 
-from setuptools import setup, find_packages
+# from setuptools import setup, find_packages
+from setuptools import find_packages
+from cx_Freeze import setup, Executable
 from codecs import open
 from os import path
 
@@ -20,6 +22,28 @@ with open(path.join(here, 'VERSION'), encoding='utf-8') as f:
 with open(path.join(here, 'requirements.txt'), encoding='utf-8') as f:
     requirements = f.read().splitlines()
 
+build_exe_options = {
+    # "icon": r"assets/favicon/favicon.ico",
+    "includes": [
+        "config",
+        "sqlalchemy.sql.default_comparator",
+        "faker.providers",
+        "jinja2.ext",
+    ],
+    "include_files": [
+        "static",
+        "templates",
+        "db",
+        "docx",
+        "log",
+        "upload",
+    ],
+    # "path": [
+    #     path.dirname(__file__),
+    # ],
+}
+
+base = None
 setup(
     name='ExeCom',
     version=version,
@@ -27,6 +51,7 @@ setup(
     description='Executive committee database for archive',
     long_description=long_description,
     url='https://github.com/garhivelg/execom',
+    executables = [Executable("manage.py", base=base)],
 
     author=' ',
     author_email='d2emonium@gmail.com',
@@ -63,7 +88,11 @@ setup(
 
     entry_points={
         'console_scripts': [
-            'server=app:run',
+            'server=management:run',
         ],
+    },
+
+    options = {
+        "build_exe": build_exe_options,
     },
 )

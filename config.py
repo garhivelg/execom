@@ -1,3 +1,4 @@
+# import sys
 import os
 from datetime import timedelta
 import locale
@@ -5,6 +6,10 @@ import locale
 
 # BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 BASE_DIR = os.path.abspath(os.getcwd())
+# if getattr(sys, 'frozen', False):
+#     BASE_DIR = os.path.dirname(sys.executable)
+# else:
+#     BASE_DIR = os.path.dirname(__file__)
 
 try:
     locale.setlocale(locale.LC_ALL, 'russian')
@@ -18,8 +23,7 @@ class Config(object):
     SECRET_KEY = "ThereIsNoSpoon"
 
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///db/execom.db'
-    # SQLALCHEMY_DATABASE_URI = 'sqlite://'
+    # SQLALCHEMY_DATABASE_URI = 'sqlite:///db/execom.db'
 
     LOG = {
         "FILENAME": os.path.join(BASE_DIR, "log", "execom.log"),
@@ -31,8 +35,10 @@ class Config(object):
     BACKUP_TIME = timedelta(minutes=30)
     DB_PATH = os.path.join(BASE_DIR, "db")
     BACKUP_PATH = os.path.join(BASE_DIR, "db", "backup")
-    DB_FILENAME = "privatisation.db"
-    BACKUP_FILENAME = "privatisation-%s.db"
+    DB_FILENAME = "execom.db"
+    BACKUP_FILENAME = "execom-%s.db"
+    SQLALCHEMY_DATABASE_URI = "sqlite:////%s/%s" % (DB_PATH, DB_FILENAME)
+    # SQLALCHEMY_DATABASE_URI = "sqlite:///"
 
     VIEW_CASE = "edit_case"
 
