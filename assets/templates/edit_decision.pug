@@ -1,0 +1,28 @@
+extends _execom.pug
+
+block content
+  .row
+    .col-md-6
+      | {% if decision.id %}
+      .btn-toolbar
+        a(href="{{ url_for('export_decision', decision_id=decision.id) }}", class="btn btn-default") <span class="glyphicon glyphicon-plus"></span> Скачать .docx</a>
+      | {% endif %}
+      form(method="post", action="{{ url_for('edit_decision', decision_id=decision.id) }}")
+        | {{ form.hidden_tag() }}
+        p(class="sized-field") {{ form.protocol.label }} {{ form.protocol(class="form-control") }}
+        p(class="sized-field") {{ form.decision_id.label }} {{ form.decision_id(class="form-control") }}
+        p(class="sized-field") {{ form.topic.label }} {{ form.topic(class="form-control") }}
+        div(class="dz-preview")
+          | {% if files %}
+          div(class="dz-image")
+            img(src="{{ url_for('static', filename='upload/' + 'form.image.data') }}")
+          | {% endif %}
+        div(id="movie-dropzone", class="dropzone")
+          div(class="dropzone-previews")
+          div(class="dz-message", data-dz-message)
+            span Прикрепите файлы
+        p(class="sized-field")
+          | {{ form.description.label }}
+          | {{ form.description(rows=5, cols=40, class="form-control") }}
+        p
+          input(type="submit", class="btn btn-success", value="Сохранить")

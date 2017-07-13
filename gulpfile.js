@@ -27,29 +27,51 @@ gulp.task('bootstrap_fonts', function(){
     .pipe(gulp.dest('static/fonts'));
 });
 
+gulp.task('chart', function(){
+  return gulp.src('assets/bower_components/chart.js/dist/Chart.min.js')
+    .pipe(gulp.dest('static/js'));
+});
+
 gulp.task('jquery', function(){
   return gulp.src('assets/bower_components/jquery/dist/jquery.min.js')
     .pipe(gulp.dest('static/js'));
 });
 
-gulp.task('dropzone_css', function(){
-  return gulp.src('assets/bower_components/dropzone/dist/min/dropzone.min.css')
-    .pipe(gulp.dest('static/css'));
-});
-
-gulp.task('dropzone_js', function(){
-  return gulp.src('assets/bower_components/dropzone/dist/min/dropzone.min.js')
+gulp.task('pace', function(){
+  return gulp.src('assets/bower_components/PACE/pace.min.js')
     .pipe(gulp.dest('static/js'));
 });
 
-gulp.task('fa_css', function(){
-  return gulp.src('assets/bower_components/components-font-awesome/css/font-awesome.min.css')
+gulp.task('tether', function(){
+  return gulp.src('assets/bower_components/tether/dist/js/tether.min.js')
+    .pipe(gulp.dest('static/js'));
+});
+
+gulp.task('crud_css', function(){
+  return gulp.src([
+    'assets/bower_components/crud-assets/css/main.less'
+  ])
+    .pipe(gulp.dest('assets/less'));
+});
+
+gulp.task('crud_js', function(){
+  return gulp.src('assets/bower_components/crud-assets/js/**/*.js')
+    .pipe(gulp.dest('assets/js/crud-assets'));
+});
+
+// Prepare css
+gulp.task('less', ['crud_css', ], function(){
+  return gulp.src('assets/less/*.less')
+    .pipe(less())
+    .pipe(concat('index.css'))
+    // .pipe(csso())
     .pipe(gulp.dest('static/css'));
 });
 
-gulp.task('fa_fonts', function(){
-  return gulp.src('assets/bower_components/components-font-awesome/fonts/*')
-    .pipe(gulp.dest('static/fonts'));
+gulp.task('css', ['bootstrap_css', 'less'], function(){
+  return gulp.src('assets/css/*.css')
+    .pipe(csso())
+    .pipe(gulp.dest('static/css'));
 });
 
 gulp.task('favicon', function(){
@@ -57,42 +79,61 @@ gulp.task('favicon', function(){
     .pipe(gulp.dest('static/favicon'));
 });
 
-gulp.task('fonts', ['bootstrap_fonts', 'fa_fonts']);
-
-// Prepare css
-gulp.task('css', ['bootstrap_css', 'dropzone_css', 'fa_css'], function(){
-  return gulp.src('assets/css/*.less')
-    .pipe(less())
-    .pipe(csso())
-    .pipe(gulp.dest('static/css'));
+// Prepare fonts
+gulp.task('fonts', ['bootstrap_fonts'], function(){
+  return gulp.src('assets/fonts/*')
+    .pipe(gulp.dest('static/fonts'));
 });
 
-// Prepare pug
-gulp.task('html', function(){
-  return gulp.src([
-    'assets/pug/*.pug',
-    '!assets/pug/_*.pug'
-  ])
-    .pipe(pug({pretty: true}))
-    // .pipe(on("error", console.log))
-    .pipe(gulp.dest('templates'));
+gulp.task('img', function(){
+  return gulp.src('assets/img/*')
+    .pipe(gulp.dest('static/img'));
+});
+
+//Prepare images
+gulp.task('images', ['img'], function(){
+return gulp.src('assets/images/*')
+ .pipe(gulp.dest('static/images'));
 });
 
 // Prepare js
-gulp.task('js', ['jquery', 'bootstrap_js', 'dropzone_js'], function(){
-  return gulp.src('assets/js/**/*.js')
+gulp.task('js', ['jquery', 'bootstrap_js', 'crud_js', 'tether', 'pace', 'chart'], function(){
+  return gulp.src([
+    'assets/js/**/*.js',
+    '!assets/js/views/*.js'
+  ])
     .pipe(concat('index.js'))
     .pipe(gulp.dest('static/js'));
 });
 
+// Prepare pug
+gulp.task('txt', function(){
+  return gulp.src([
+    'assets/templates/**/*.txt',
+    '!assets/templates/**/_*.txt'
+  ])
+    .pipe(gulp.dest('templates/'));
+});
+
+gulp.task('html', ['txt'], function(){
+  return gulp.src([
+    'assets/templates/**/*.pug',
+    '!assets/templates/**/_*.pug'
+  ])
+    .pipe(pug({pretty: true}))
+    // .pipe(on("error", console.log))
+    .pipe(gulp.dest('templates/'));
+});
+
 // Watch for changes
-gulp.task('watch', ['fonts', 'css', 'html', 'js'], function() {
-  gulp.watch('assets/css/*.less', ['css']);
-  gulp.watch('assets/pug/*.pug', ['html']);
+gulp.task('watch', ['css', 'html', 'js', 'fonts', 'images'], function() {
+  gulp.watch('assets/less/*.less', ['css']);
+  gulp.watch('assets/templates/**/*.pug', ['html']);
+  gulp.watch('assets/fonts/*', ['fonts']);
   gulp.watch('assets/js/**/*.js', ['js']);
+  gulp.watch('assets/images/*', ['images']);
 });
 
 gulp.task('bootstrap', ['bootstrap_css', 'bootstrap_js', 'bootstrap_fonts']);
 gulp.task('dropzone', ['dropzone_css', 'dropzone_js']);
-gulp.task('fa', ['fa_css', 'fa_fonts']);
-gulp.task('default', ['clean', 'favicon', 'fonts', 'html', 'css', 'js']);
+gulp.task('default', ['clean', 'favicon', 'fonts', 'html', 'css', 'js', 'images']);

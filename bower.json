@@ -25,6 +25,7 @@
     "jquery": "^3.2.1",
     "bootstrap": "^3.3.7",
     "dropzone": "^5.0.1",
-    "components-font-awesome": "^4.7.0"
+    "components-font-awesome": "^4.7.0",
+    "crud-assets": "git+https://github.com/d2emon/crud-assets.git"
   }
 }

@@ -1,0 +1,79 @@
+extends _list.pug
+
+block table_headers
+  // | Протоколы
+  thead
+    tr
+      th(class="col-md-1 col-lg1 col-sm-1")
+      th
+        | Протокол
+      th
+        | {%if order_id==1%}
+        a(href="?order=1{% if not desc %}&desc=1{% endif %}&page={{items.page}}") 
+          | №
+          i(class="fa fa-chevron-{% if desc %}up{% else %}down{% endif %} pull-right")
+        | {%else%}
+        a(href="?order=1&page={{items.page}}") 
+          | №
+          i(class="fa fa-arrows-v pull-right")
+        | {%endif%}
+      th
+        | {%if order_id==2%}
+        a(href="?order=2{% if not desc %}&desc=1{% endif %}") 
+          | Дата 
+          i(class="fa fa-chevron-{% if desc %}up{% else %}down{% endif %} pull-right")
+        | {%else%}
+        a(href="?order=2") 
+          | Дата 
+          i(class="fa fa-arrows-v pull-right")
+        | {%endif%}
+      th
+        | {%if order_id==3%}
+        a(href="?order=3{% if not desc %}&desc=1{% endif %}") 
+          | Опись 
+          i(class="fa fa-chevron-{% if desc %}up{% else %}down{% endif %} pull-right")
+        | {%else%}
+        a(href="?order=3") 
+          | Опись 
+          i(class="fa fa-arrows-v pull-right")
+        | {%endif%}
+      th
+        | {%if order_id==4%}
+        a(href="?order=4{% if not desc %}&desc=1{% endif %}") 
+          | Дело 
+          i(class="fa fa-chevron-{% if desc %}up{% else %}down{% endif %} pull-right")
+        | {%else%}
+        a(href="?order=4") 
+          | Дело 
+          i(class="fa fa-arrows-v pull-right")
+        | {%endif%}
+      th
+        | {%if order_id==5%}
+        a(href="?order=5{% if not desc %}&desc=1{% endif %}") 
+          | Решений 
+          i(class="fa fa-chevron-{% if desc %}up{% else %}down{% endif %} pull-right")
+        | {%else%}
+        a(href="?order=5") 
+          | Решений
+          i(class="fa fa-arrows-v pull-right")
+        | {%endif%}
+
+block row_data
+  td
+    center
+      div(class="btn-group btn-group-xs")
+        a(href="{{ url_for('edit_protocol', protocol_id=i[0].id) }}", class="btn btn-sm btn-primary" data-toggle="tooltip", title="Редактировать")
+          i(class="fa fa-edit")
+        a(data-href="{{ url_for('edit_protocol', protocol_id=i[0].id) }}", class="btn btn-sm btn-primary confirm" data-toggle="modal", title="Удалить", data-text="Вы уверены, что хотите удалить эту запись?", data-target="#confirm-del")
+          i(class="fa fa-eraser")
+  | {% with p = i.0 %}
+  td 
+    a(href="{{ url_for('list_decisions', protocol_id=p.id) }}") {{ p }}  
+  td {{ p.protocol_id }}  
+  td {{ p.protocol_date.strftime("%d %b %Y") }}  
+  td
+    a(href="{{ url_for('edit_register', register_id=p.case.register_id) }}") {{ p.case.register }}  
+  td  
+    a(href="{{ url_for('edit_case', case_id=p.case.id) }}") {{ p.case.book_num }}  
+  td {{ i[1] }}
+  | {% endwith %}

@@ -1,0 +1,19 @@
+| {% if items.pages %}
+ul(class="pagination pagination-sm", style="display:inherit;")
+  li(class="{% if not items.has_prev %}disabled{% endif %}")
+    a(href="?page={{ items.prev_num }}")
+      span(class="glyphicon glyphicon-menu-left")
+  | {%- for page in items.iter_pages() %}
+  | {% if page %}
+  li(class="{% if page == items.page %}active{% endif %}")
+    a(href="?page={{ page }}") {{ page }}
+  | {% else %}
+  li
+    span(class=ellipsis) …
+  | {% endif %}
+  | {%- endfor %}
+  li(class="{% if not items.has_next %}disabled{% endif %}")
+    a(href="?page={{ items.next_num }}")
+      span(class="glyphicon glyphicon-menu-right")
+| {% endif %}
+

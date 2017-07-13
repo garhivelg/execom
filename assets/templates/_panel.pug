@@ -1,0 +1,33 @@
+mixin panel(title, edit, filtered, paged)
+  div(class="panel panel-primary")
+    .panel-heading
+      h4.panel-title= title
+    if filtered
+      | {% if add %}
+      .panel-group#accordion1
+        div(class="panel panel-default")
+          .panel-heading
+            h4.panel-title 
+              a(class="acordion-toggle", href="#accordion1_href", data-toggle="collapse", data-parent="#accordion1") Поиск <span class="caret"></span>
+          div(id="accordion1_href", class="panel-collapse collapse")
+            div(class="panel-body")
+              include _filter.pug
+      | {% endif %}
+    if edit
+      div(class="well well-sm")
+        | &nbsp;
+        a(href=edit, class="btn btn-sm btn-primary", datat-toggle="tooltip", title="Редактировать")
+          i(class="fa fa-edit")
+    if paged
+      div(class="well well-sm")
+        include _pagination.pug
+        | &nbsp;
+        a(href="{{ add }}", class="btn btn-sm btn-primary", data-toggle="tooltip", title="Добавить") <i class="fa fa-plus"></i>
+
+        .pull-right
+          strong Количество: 
+          | {{ items.total }}
+    
+    if block
+      block
+
