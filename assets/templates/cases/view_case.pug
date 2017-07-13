@@ -16,8 +16,6 @@ block content
     .panel-body
       p <strong>Опись:</strong> {{ case.register }}
       p <strong>Дело №:</strong> {{ case.book_num }}
-      p <strong>Предприятие:</strong> 
-        a(href="{{ url_for('view_facility', facility_id=case.facility.id) }}") {{ case.facility }}
       | {% if case.description %}
       | {{ case.description }}
       | {% endif %}

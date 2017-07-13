@@ -48,16 +48,6 @@ block table_headers
           | Опись
           i(class="fa fa-arrows-v pull-right")
         | {%endif%}
-      th
-        | {%if order_id==3%}
-        a(href="?order=3{% if not desc %}&desc={{desc}}{% endif %}") 
-          | Предприятие
-          i(class="fa fa-chevron-{% if desc %}up{% else %}down{% endif %} pull-right")
-        | {%else%}
-        a(href="?order=3") 
-          | Предприятие
-          i(class="fa fa-arrows-v pull-right")
-        | {%endif%}
 
 block row_controls
   td
@@ -73,8 +63,4 @@ block row_controls
 block row_data
   td {{ i.book_num }}  
   td {{ i.register }}
-  td 
-    | {% if i.facility %}
-    a(href="{{ url_for('view_facility', facility_id=i.facility.id) }}") {{ i.facility }}
-    | {% endif %}
 
