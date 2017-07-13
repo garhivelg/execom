@@ -72,7 +72,7 @@ def list_protocols():
     print(items)
 
     return render_template(
-        "list_protocols.html",
+        "execom/list_protocols.html",
         order_id=order_id,
         desc=desc,
         title="Протоколы",
@@ -108,7 +108,12 @@ def edit_protocol(protocol_id=None, case_id=None):
 
     decisions = Decision.query.filter_by(protocol=protocol)
 
-    return render_template("edit_protocol.html", form=form, protocol=protocol, decisions=decisions)
+    return render_template(
+        "execom/edit_protocol.html",
+        form=form,
+        protocol=protocol,
+        decisions=decisions
+    )
 
 
 @app.route("/protocol/del/<int:protocol_id>")
@@ -143,7 +148,7 @@ def list_decisions(protocol_id=None):
     items = order(items, orders.get(order_id), desc)
 
     return render_template(
-        "list_decisions.html",
+        "execom/list_decisions.html",
         protocol=protocol,
         order_id=order_id,
         desc=desc,
@@ -186,7 +191,12 @@ def edit_decision(decision_id=None, protocol_id=None):
         files = []
 
     app.logger.debug("DECISON (%s %s)", decision.id, decision)
-    return render_template("edit_decision.html", form=form, decision=decision, files=files)
+    return render_template(
+        "execom/edit_decision.html",
+        form=form,
+        decision=decision,
+        files=files
+    )
 
 
 @app.route("/decision/del/<int:decision_id>")
