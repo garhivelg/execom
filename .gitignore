@@ -105,5 +105,6 @@ ENV/
 
 bower_components/
 node_modules/
+/assets/**/crud-assets/
 /static/
 /templates/
