@@ -51,7 +51,7 @@ setup(
     description='Executive committee database for archive',
     long_description=long_description,
     url='https://github.com/garhivelg/execom',
-    executables = [Executable("manage.py", base=base)],
+    executables = [Executable("manage.py", base=base, icon=r"assets/favicon/favicon.ico")],
 
     author=' ',
     author_email='d2emonium@gmail.com',

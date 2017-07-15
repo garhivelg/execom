@@ -38,7 +38,7 @@ class Config(object):
     DB_FILENAME = "execom.db"
     BACKUP_FILENAME = "execom-%s.db"
     # SQLALCHEMY_DATABASE_URI = "sqlite:////%s/%s" % (DB_PATH, DB_FILENAME)
-    SQLALCHEMY_DATABASE_URI = "sqlite:///db/%s" % (DB_FILENAME)
+    SQLALCHEMY_DATABASE_URI = "sqlite:///../db/%s" % (DB_FILENAME)
 
     VIEW_CASE = "edit_case"
 

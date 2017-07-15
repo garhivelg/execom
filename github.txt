@@ -1,0 +1,4 @@
+git+https://github.com/d2emon/pybackup.git
+git+https://github.com/garhivelg/case.git
+backup=0.1.0
+case=0.2.3
