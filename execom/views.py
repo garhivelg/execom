@@ -112,7 +112,7 @@ def edit_protocol(protocol_id=None, case_id=None):
         "execom/edit_protocol.html",
         form=form,
         protocol=protocol,
-        decisions=decisions
+        items=decisions
     )
 
 
