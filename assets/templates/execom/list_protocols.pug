@@ -67,7 +67,7 @@ block row_data
           i(class="fa fa-search")      
         a(href="{{ url_for('edit_protocol', protocol_id=p.id) }}", class="btn btn-sm btn-primary" data-toggle="tooltip", title="Редактировать")
           i(class="fa fa-edit")
-        a(data-href="{{ url_for('edit_protocol', protocol_id=p.id) }}", class="btn btn-sm btn-primary confirm" data-toggle="modal", title="Удалить", data-text="Вы уверены, что хотите удалить эту запись?", data-target="#confirm-del")
+        a(data-href="{{ url_for('del_protocol', protocol_id=p.id) }}", class="btn btn-sm btn-primary confirm" data-toggle="modal", title="Удалить", data-text="Вы уверены, что хотите удалить эту запись?", data-target="#confirm-del")
           i(class="fa fa-eraser")
   td 
     a(href="{{ url_for('list_decisions', protocol_id=p.id) }}") {{ p }}  
