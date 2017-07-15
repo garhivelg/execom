@@ -59,21 +59,31 @@ block table_headers
         | {%endif%}
 
 block row_data
+  | {% with p = i.0 %}
   td
     center
       div(class="btn-group btn-group-xs")
-        a(href="{{ url_for('edit_protocol', protocol_id=i[0].id) }}", class="btn btn-sm btn-primary" data-toggle="tooltip", title="Редактировать")
+        a(href="{{ url_for('list_decisions', protocol_id=p.id) }}", class="btn btn-sm btn-primary" data-toggle="tooltip", title="Просмотреть")
+          i(class="fa fa-search")      
+        a(href="{{ url_for('edit_protocol', protocol_id=p.id) }}", class="btn btn-sm btn-primary" data-toggle="tooltip", title="Редактировать")
           i(class="fa fa-edit")
-        a(data-href="{{ url_for('edit_protocol', protocol_id=i[0].id) }}", class="btn btn-sm btn-primary confirm" data-toggle="modal", title="Удалить", data-text="Вы уверены, что хотите удалить эту запись?", data-target="#confirm-del")
+        a(data-href="{{ url_for('edit_protocol', protocol_id=p.id) }}", class="btn btn-sm btn-primary confirm" data-toggle="modal", title="Удалить", data-text="Вы уверены, что хотите удалить эту запись?", data-target="#confirm-del")
           i(class="fa fa-eraser")
-  | {% with p = i.0 %}
   td 
     a(href="{{ url_for('list_decisions', protocol_id=p.id) }}") {{ p }}  
   td {{ p.protocol_id }}  
   td {{ p.protocol_date.strftime("%d %b %Y") }}  
   td
+    | {% if p.case %}
     a(href="{{ url_for('edit_register', register_id=p.case.register_id) }}") {{ p.case.register }}  
+    | {% else %}
+    strong Дело не указано!
+    | {% endif %}
   td  
+    | {% if p.case %}
     a(href="{{ url_for('edit_case', case_id=p.case.id) }}") {{ p.case.book_num }}  
+    | {% else %}
+    strong Дело не указано!
+    | {% endif %}
   td {{ i[1] }}
   | {% endwith %}

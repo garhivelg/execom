@@ -108,11 +108,12 @@ def edit_protocol(protocol_id=None, case_id=None):
 
     decisions = Decision.query.filter_by(protocol=protocol)
 
+    app.logger.debug("DECISIONS: %s", decisions)
     return render_template(
         "execom/edit_protocol.html",
         form=form,
         protocol=protocol,
-        items=decisions
+        items=decisions.paginate(page(), app.config.get('RECORDS_ON_PAGE'))
     )
 
 
