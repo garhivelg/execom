@@ -27,7 +27,7 @@ class Config(object):
 
     LOG = {
         "FILENAME": os.path.join(BASE_DIR, "log", "execom.log"),
-        "MAX_BYTES": 10000,
+        "MAX_BYTES": 1024 * 1024,
         "BACKUP_COUNT": 10,
         "FORMAT": "%(asctime)s[%(levelname)s]:\t%(message)s\tin %(module)s at %(lineno)d",
     }
@@ -37,8 +37,8 @@ class Config(object):
     BACKUP_PATH = os.path.join(BASE_DIR, "db", "backup")
     DB_FILENAME = "execom.db"
     BACKUP_FILENAME = "execom-%s.db"
-    SQLALCHEMY_DATABASE_URI = "sqlite:////%s/%s" % (DB_PATH, DB_FILENAME)
-    # SQLALCHEMY_DATABASE_URI = "sqlite:///"
+    # SQLALCHEMY_DATABASE_URI = "sqlite:////%s/%s" % (DB_PATH, DB_FILENAME)
+    SQLALCHEMY_DATABASE_URI = "sqlite:///db/%s" % (DB_FILENAME)
 
     VIEW_CASE = "edit_case"
 
