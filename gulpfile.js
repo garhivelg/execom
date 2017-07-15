@@ -47,6 +47,26 @@ gulp.task('tether', function(){
     .pipe(gulp.dest('static/js'));
 });
 
+gulp.task('dropzone_css', function(){
+  return gulp.src('assets/bower_components/dropzone/dist/min/dropzone.min.css')
+    .pipe(gulp.dest('static/css'));
+});
+
+gulp.task('dropzone_js', function(){
+  return gulp.src('assets/bower_components/dropzone/dist/min/dropzone.min.js')
+    .pipe(gulp.dest('static/js'));
+});
+
+gulp.task('fa_css', function(){
+  return gulp.src('assets/bower_components/components-font-awesome/css/font-awesome.min.css')
+    .pipe(gulp.dest('static/css'));
+});
+
+gulp.task('fa_fonts', function(){
+  return gulp.src('assets/bower_components/components-font-awesome/fonts/*')
+    .pipe(gulp.dest('static/fonts'));
+});
+
 gulp.task('crud_css', function(){
   return gulp.src([
     'assets/bower_components/crud-assets/css/main.less'
@@ -61,14 +81,14 @@ gulp.task('crud_js', function(){
 
 // Prepare css
 gulp.task('less', ['crud_css', ], function(){
-  return gulp.src('assets/less/*.less')
+  return gulp.src('assets/css/*.less')
     .pipe(less())
-    .pipe(concat('index.css'))
+    .pipe(concat('main.css'))
     // .pipe(csso())
     .pipe(gulp.dest('static/css'));
 });
 
-gulp.task('css', ['bootstrap_css', 'less'], function(){
+gulp.task('css', ['bootstrap_css', 'dropzone_css', 'fa_css', 'less'], function(){
   return gulp.src('assets/css/*.css')
     .pipe(csso())
     .pipe(gulp.dest('static/css'));
@@ -80,7 +100,7 @@ gulp.task('favicon', function(){
 });
 
 // Prepare fonts
-gulp.task('fonts', ['bootstrap_fonts'], function(){
+gulp.task('fonts', ['bootstrap_fonts', 'fa_fonts'], function(){
   return gulp.src('assets/fonts/*')
     .pipe(gulp.dest('static/fonts'));
 });
@@ -97,7 +117,7 @@ return gulp.src('assets/images/*')
 });
 
 // Prepare js
-gulp.task('js', ['jquery', 'bootstrap_js', 'crud_js', 'tether', 'pace', 'chart'], function(){
+gulp.task('js', ['jquery', 'bootstrap_js', 'crud_js', 'tether', 'pace', 'chart', 'dropzone_js'], function(){
   return gulp.src([
     'assets/js/**/*.js',
     '!assets/js/views/*.js'
@@ -136,4 +156,5 @@ gulp.task('watch', ['css', 'html', 'js', 'fonts', 'images'], function() {
 
 gulp.task('bootstrap', ['bootstrap_css', 'bootstrap_js', 'bootstrap_fonts']);
 gulp.task('dropzone', ['dropzone_css', 'dropzone_js']);
+gulp.task('fa', ['fa_css', 'fa_fonts']);
 gulp.task('default', ['clean', 'favicon', 'fonts', 'html', 'css', 'js', 'images']);
