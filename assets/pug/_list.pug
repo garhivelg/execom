@@ -57,6 +57,17 @@ block content
           strong Количество: 
           | {{ items.total }}
       | {% if items %}
+      mixin sortable(order_id, title)
+        th
+          | {%if order_id==#{order_id}%}
+          a(href="?order=#{order_id}{% if not desc %}&desc={{desc}}{% endif %}") 
+            = title
+            i(class="fa fa-chevron-{% if desc %}up{% else %}down{% endif %} pull-right")
+          | {%else%}
+          a(href="?order=#{order_id}") 
+            = title
+            i(class="fa fa-arrows-v pull-right")
+          | {%endif%}
       .table-responsive
         table(class="table table-bordered table-hover")
           block table_headers
