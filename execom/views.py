@@ -55,8 +55,7 @@ def list_protocols():
     orders = {
         1: [Protocol.protocol_id, ],
         2: [Protocol.protocol_date, ],
-        3: [Register.fund, Register.register],
-        4: [Case.book_num, ],
+        3: [Register.fund, Register.register, Case.book_num, ],
     }
 
     items = db.session.query(Protocol, db.func.count(Protocol.decisions).label('decision_count'))
