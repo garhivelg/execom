@@ -81,7 +81,7 @@ block row_data
   td {% if i.date %}{{ i.date.strftime("%d %b %Y") }}{% else %}Без даты{% endif %} 
   td {{ i.topic }}  
   td 
-    | {% if i.prtotocol %}
+    | {% if i.protocol %}
     a(href="{{ url_for('list_decisions', protocol_id=i.protocol.id) }}") {{ i.protocol }}  
     | {% else %}
     strong Решение не привязано к протоколу

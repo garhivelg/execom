@@ -11,7 +11,9 @@ block content
         | {{ form.hidden_tag() }}
         p(class="sized-field") {{ form.protocol.label }} {{ form.protocol(class="form-control") }}
         p(class="sized-field") {{ form.decision_id.label }} {{ form.decision_id(class="form-control") }}
-        p(class="sized-field") {{ form.topic.label }} {{ form.topic(class="form-control") }}
+        p(class="sized-field")
+          | {{ form.topic.label }}
+          | {{ form.topic(rows=5, cols=40, class="form-control") }}
         div(class="dz-preview")
           | {% if files %}
           div(class="dz-image")

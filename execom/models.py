@@ -1,4 +1,5 @@
 from app import db
+from wtforms import TextAreaField
 import random
 
 
@@ -51,7 +52,13 @@ class Decision(db.Model):
         info={'label': "Решение №"}
     )
     decision_num = db.Column(db.Integer, nullable=False, default=0)
-    topic = db.Column(db.String(256), info={'label': "Тема"})
+    topic = db.Column(
+        db.String(256),
+        info={
+            'label': "Тема",
+            'form_field_class': TextAreaField,
+        }
+    )
     decision_date = db.Column(db.Date, info={'label': "Дата"})
     description = db.Column(db.UnicodeText, info={'label': "Описание"})
 
