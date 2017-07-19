@@ -31,11 +31,11 @@ block table_headers
       th
         | {%if order_id==1%}
         a(href="?order=1{% if not desc %}&desc={{desc}}{% endif %}") 
-          | Решение №
+          | Постановление №
           i(class="fa fa-chevron-{% if desc %}up{% else %}down{% endif %} pull-right")
         | {%else%}
         a(href="?order=1") 
-          | Решение № 
+          | Постановление № 
           i(class="fa fa-arrows-v pull-right")
         | {%endif%}
       th
@@ -51,11 +51,11 @@ block table_headers
       th
         | {%if order_id==4%}
         a(href="?order=4{% if not desc %}&desc={{desc}}{% endif %}") 
-          | Протокол 
+          | Решение
           i(class="fa fa-chevron-{% if desc %}up{% else %}down{% endif %} pull-right")
         | {%else%}
         a(href="?order=4") 
-          | Протокол
+          | Решение
           i(class="fa fa-arrows-v pull-right")
         | {%endif%}
 

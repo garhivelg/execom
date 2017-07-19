@@ -18,10 +18,16 @@ class Protocol(db.Model):
     decisions = db.relationship("Decision", backref="protocol")
 
     def title(self, format="Протокол №%d от %s"):
-        return format % (self.protocol_id, self.protocol_date.strftime("%x"))
+        return format % (self.protocol_id, self.date)
 
     def __repr__(self):
         return self.title()
+
+    @property
+    def date(self):
+        if self.protocol_date:
+            return self.protocol_date.strftime("%x")
+        return None
 
     @property
     def decisions_count(self):

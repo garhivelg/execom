@@ -78,7 +78,11 @@ block row_data
         a(data-href="{{ url_for('del_decision', decision_id=i.id) }}", class="btn btn-sm btn-primary confirm" data-toggle="modal", title="Удалить", data-text="Вы уверены, что хотите удалить эту запись?", data-target="#confirm-del")
           i(class="fa fa-eraser")
   td {{ i.decision_id }}  
-  td {{ i.date.strftime("%d %b %Y") }}  
+  td {% if i.date %}{{ i.date.strftime("%d %b %Y") }}{% else %}Без даты{% endif %} 
   td {{ i.topic }}  
   td 
+    | {% if i.prtotocol %}
     a(href="{{ url_for('list_decisions', protocol_id=i.protocol.id) }}") {{ i.protocol }}  
+    | {% else %}
+    strong Решение не привязано к протоколу
+    | {% endif %}
