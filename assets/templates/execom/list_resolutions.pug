@@ -28,7 +28,7 @@ block table_headers
   thead
     tr
       th(class="col-md-1 col-lg1 col-sm-1")
-      th
+      th(style="width: 160px;")
         | {%if order_id==1%}
         a(href="?order=1{% if not desc %}&desc={{desc}}{% endif %}") 
           | Постановление №
@@ -38,7 +38,7 @@ block table_headers
           | Постановление № 
           i(class="fa fa-arrows-v pull-right")
         | {%endif%}
-      th
+      th(style="width: 100px;")
         | {%if order_id==2%}
         a(href="?order=2{% if not desc %}&desc={{desc}}{% endif %}") 
           | Дата 
