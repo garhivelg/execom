@@ -100,7 +100,11 @@ ENV/
 # mypy
 .mypy_cache/
 
+.project
+.pydevproject
+
 bower_components/
 node_modules/
-static/
-templates/
+/assets/**/crud-assets/
+/static/
+/templates/

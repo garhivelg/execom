@@ -1,0 +1,20 @@
+extends ../_execom.pug
+
+block content
+  .row
+    .col-md-6
+      form(method="post", action="{{ url_for('edit_protocol', protocol_id=protocol.id) }}")
+        | {{ form.hidden_tag() }}
+        p(class="sized-field") {{ form.case.label }} {{ form.case(class="form-control") }}
+        p(class="sized-field") {{ form.protocol_id.label }} {{ form.protocol_id(class="form-control") }}
+        p(class="sized-field") {{ form.protocol_date.label }} {{ form.protocol_date(class="form-control") }}
+        p(class="sized-field")
+          | {{ form.description.label }}
+          | {{ form.description(rows=5, cols=40, class="form-control") }}
+        p
+          input(type="submit", class="btn btn-success", value="Сохранить")
+    | {% if protocol.id %}
+    .col-md-6
+      include ../_children.pug
+      +children('Решения:', decisions, "{{ url_for('edit_decision', decision_id=i.id) }}", "{{ url_for('edit_decision', protocol_id=protocol.id) }}", "В этом протоколе нет решений")
+    | {% endif %}

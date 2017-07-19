@@ -1,0 +1,13 @@
+form(id="filter_form", class="form-search", method="get")
+  .btn-group
+    button(type="button", class="btn btn-default dropdown-toggle", data-toggle="dropdown") Добавить Фильтр <span class="caret"></span>
+    ul.dropdown-menu
+      li
+        a(href="#", name="protocol", class"filter btn") Протокол
+      li
+        a(href="#", name="record", class"filter btn") Опись
+      li
+        a(href="#", name="case", class"filter btn") Дело
+  table(class="table table-responsive table-hover filters")
+  button(type="submit", class="btn btn-sm btn-primary") <span class="glyphicon glyphicon-plus"></span> Искать <i class="fa fa-search"></i>
+

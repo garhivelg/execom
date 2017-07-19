@@ -60,18 +60,19 @@ def list_protocols():
     }
 
     items = db.session.query(Protocol, db.func.count(Protocol.decisions).label('decision_count'))
-    items = items.join(Protocol.case).join(Case.register)
-    items = items.join(Protocol.decisions).group_by(Protocol)
+    items = items.outerjoin(Protocol.case).outerjoin(Case.register)
+    items = items.outerjoin(Protocol.decisions).group_by(Protocol)
     if order_id == 5:
         desc_text = " DESC" if desc else " ASC"
         items = items.order_by(db.text("\"decision_count\"%s" % (desc_text, )))
     else:
         items = order(items, orders.get(order_id), desc)
+    app.logger.debug(items)
     items = items.paginate(page(), app.config.get('RECORDS_ON_PAGE'))
     print(items)
 
     return render_template(
-        "list_protocols.html",
+        "execom/list_protocols.html",
         order_id=order_id,
         desc=desc,
         title="Протоколы",
@@ -107,7 +108,13 @@ def edit_protocol(protocol_id=None, case_id=None):
 
     decisions = Decision.query.filter_by(protocol=protocol)
 
-    return render_template("edit_protocol.html", form=form, protocol=protocol, decisions=decisions)
+    app.logger.debug("DECISIONS: %s", decisions)
+    return render_template(
+        "execom/edit_protocol.html",
+        form=form,
+        protocol=protocol,
+        items=decisions.paginate(page(), app.config.get('RECORDS_ON_PAGE'))
+    )
 
 
 @app.route("/protocol/del/<int:protocol_id>")
@@ -124,7 +131,7 @@ def del_protocol(protocol_id=None):
 def list_decisions(protocol_id=None):
     order_id, desc = get_order()
     orders = {
-        1: [Decision.decision_num, ],
+        1: [Decision.decision_id, ],
         2: [Protocol.protocol_date, Decision.decision_date, ],
         3: [Decision.topic, ],
         4: [Protocol.protocol_id, ],
@@ -135,17 +142,20 @@ def list_decisions(protocol_id=None):
     if protocol_id is not None:
         protocol = Protocol.query.get_or_404(protocol_id)
         items = items.filter_by(protocol=protocol)
+        add = url_for("edit_decision", protocol_id=protocol.id)
+    else:
+        add = url_for("edit_decision")
     items = items.join(Protocol)
     items = order(items, orders.get(order_id), desc)
 
     return render_template(
-        "list_decisions.html",
+        "execom/list_decisions.html",
         protocol=protocol,
         order_id=order_id,
         desc=desc,
         title="Протоколы",
         items=items.paginate(page(), app.config.get('RECORDS_ON_PAGE')),
-        add=url_for("edit_decision"),
+        add=add,
     )
 
 
@@ -157,6 +167,8 @@ def edit_decision(decision_id=None, protocol_id=None):
         protocol = Protocol.query.get_or_404(protocol_id)
         decision = Decision(protocol=protocol)
     elif decision_id is not None:
+        app.logger.debug(decision_id)
+        app.logger.debug([d.id for d in Decision.query.all()])
         decision = Decision.query.get_or_404(decision_id)
     else:
         decision = Decision()
@@ -174,9 +186,18 @@ def edit_decision(decision_id=None, protocol_id=None):
 
     app.logger.debug(form.errors)
 
-    files = DecisionMedia.query.filter_by(decision=decision).all()
+    if decision.id:
+        files = DecisionMedia.query.filter_by(decision=decision).all()
+    else:
+        files = []
 
-    return render_template("edit_decision.html", form=form, decision=decision, files=files)
+    app.logger.debug("DECISON (%s %s)", decision.id, decision)
+    return render_template(
+        "execom/edit_decision.html",
+        form=form,
+        decision=decision,
+        files=files
+    )
 
 
 @app.route("/decision/del/<int:decision_id>")
