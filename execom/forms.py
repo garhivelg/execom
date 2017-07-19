@@ -4,7 +4,7 @@ from wtforms_alchemy import model_form_factory
 
 
 from case.models import Case
-from .models import Protocol, Decision
+from .models import Protocol, Decision, Resolution
 
 
 from app import db
@@ -39,3 +39,14 @@ class DecisionForm(ModelForm):
 
     class Meta:
         model = Decision
+
+
+class ResolutionForm(ModelForm):
+    decision = QuerySelectField(
+        "Решение",
+        query_factory=lambda: Decision.query.all(),
+        allow_blank=True,
+    )
+
+    class Meta:
+        model = Resolution

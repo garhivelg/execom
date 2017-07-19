@@ -1,0 +1,19 @@
+extends ../_execom.pug
+
+block content
+  .row
+    .col-md-6
+      | {% if resolution.id %}
+      .btn-toolbar
+        a(href="{{ url_for('export_decision', decision_id=resolution.id) }}", class="btn btn-default") <span class="glyphicon glyphicon-plus"></span> Скачать .docx</a>
+      | {% endif %}
+      form(method="post", action="{{ url_for('edit_resolution', resolution_id=resolution.id) }}")
+        | {{ form.hidden_tag() }}
+        p(class="sized-field") {{ form.decision.label }} {{ form.decision(class="form-control") }}
+        p(class="sized-field") {{ form.resolution_id.label }} {{ form.resolution_id(class="form-control") }}
+        p(class="sized-field") {{ form.resolution_date.label }} {{ form.resolution_date(class="form-control") }}
+        p(class="sized-field")
+          | {{ form.description.label }}
+          | {{ form.description(rows=5, cols=40, class="form-control") }}
+        p
+          input(type="submit", class="btn btn-success", value="Сохранить")

@@ -5,8 +5,8 @@ from werkzeug.utils import secure_filename
 import os
 
 
-from .models import Protocol, Decision, DecisionMedia
-from .forms import ProtocolForm, DecisionForm
+from .models import Protocol, Decision, DecisionMedia, Resolution
+from .forms import ProtocolForm, DecisionForm, ResolutionForm
 
 
 from case.models import Case, Register
@@ -207,6 +207,79 @@ def del_decision(decision_id=None):
     db.session.commit()
     flash("Решение удалено", 'danger')
     return redirect(url_for("list_decisions"))
+
+
+@app.route("/decision/<int:decision_id>")
+@app.route("/resolutions")
+def list_resolutions(decision_id=None):
+    order_id, desc = get_order()
+    orders = {
+        1: [Resolution.resolution_id, ],
+        2: [Resolution.resolution_date, ],
+        4: [Decision.decision_id, ],
+    }
+
+    decision = None
+    items = Resolution.query
+    if decision_id is not None:
+        decision = Decision.query.get_or_404(decision_id)
+        items = items.filter_by(decision=decision)
+        add = url_for("edit_resolution", decision_id=decision.id)
+    else:
+        add = url_for("edit_resolution")
+    # items = items.join(Decision)
+    items = order(items, orders.get(order_id), desc)
+
+    return render_template(
+        "execom/list_resolutions.html",
+        decision=decision,
+        order_id=order_id,
+        desc=desc,
+        title="Постановления",
+        items=items.paginate(page(), app.config.get('RECORDS_ON_PAGE')),
+        add=add,
+    )
+
+
+@app.route("/resolution/add", methods=["GET", "POST", ])
+@app.route("/resolution/edit/<int:resolution_id>", methods=["GET", "POST", ])
+@app.route("/resolution/add/<int:decision_id>", methods=["GET", "POST", ])
+def edit_resolution(decision_id=None, resolution_id=None):
+    if decision_id is not None:
+        decision = Decision.query.get_or_404(decision_id)
+        resolution = Resolution(decision=decision)
+    elif resolution_id is not None:
+        resolution = Resolution.query.get_or_404(resolution_id)
+    else:
+        resolution = Resolution()
+    form = ResolutionForm(obj=resolution)
+
+    if form.validate_on_submit():
+        form.populate_obj(resolution)
+        db.session.add(resolution)
+        if resolution.id:
+            flash("Постановление изменено", 'success')
+        else:
+            flash("Постановление добавлено", 'success')
+        db.session.commit()
+        return redirect(url_for("list_resolutions"))
+
+    app.logger.debug(form.errors)
+    app.logger.debug("RESOLUTION (%s %s)", resolution.id, resolution)
+    return render_template(
+        "execom/edit_resolution.html",
+        form=form,
+        resolution=resolution
+    )
+
+
+@app.route("/resolution/del/<int:resolution_id>")
+def del_resolution(resolution_id=None):
+    resolution = Resolution.query.get_or_404(resolution_id)
+    db.session.delete(resolution)
+    db.session.commit()
+    flash("Постановление удалено", 'danger')
+    return redirect(url_for("list_resolutions"))
 
 
 @app.route("/upload/decision", methods=["POST", ])

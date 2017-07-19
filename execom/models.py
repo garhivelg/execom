@@ -89,3 +89,30 @@ class DecisionMedia(db.Model):
             return self.title
         else:
             return self.filename
+
+
+class Resolution(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    decision_id = db.Column(db.Integer, db.ForeignKey('decision.id'))
+    resolution_id = db.Column(
+        db.String(16),
+        nullable=False,
+        default="1",
+        info={'label': "Постановление №"}
+    )
+    resolution_num = db.Column(db.Integer, nullable=False, default=0)
+    resolution_date = db.Column(db.Date, info={'label': "Дата"})
+    description = db.Column(db.UnicodeText, info={'label': "Текст"})
+
+    # protocol = db.relationship("Protocol")
+
+    def title(self, format="Постановление №%s"):
+        return format % (self.resolution_id)
+
+    def __repr__(self):
+        return self.title()
+
+    def randomize(self, fake):
+        self.resolution_num = fake.pyint()
+        self.resolution_date = fake.past_date(start_date="-20y")
+        self.description = "\n".join(fake.paragraphs())
