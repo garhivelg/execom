@@ -104,7 +104,7 @@ class Resolution(db.Model):
     resolution_date = db.Column(db.Date, info={'label': "Дата"})
     description = db.Column(db.UnicodeText, info={'label': "Текст"})
 
-    # protocol = db.relationship("Protocol")
+    decision = db.relationship("Decision")
 
     def title(self, format="Постановление №%s"):
         return format % (self.resolution_id)

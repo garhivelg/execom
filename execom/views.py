@@ -102,7 +102,7 @@ def edit_protocol(protocol_id=None, case_id=None):
         else:
             flash("Протокол добавлен", 'success')
         db.session.commit()
-        return redirect(url_for("list_protocols"))
+        return redirect(url_for("list_protocols", case_id=protocol.case_id))
 
     app.logger.debug(form.errors)
 
@@ -145,7 +145,7 @@ def list_decisions(protocol_id=None):
         add = url_for("edit_decision", protocol_id=protocol.id)
     else:
         add = url_for("edit_decision")
-    items = items.join(Protocol)
+    items = items.outerjoin(Protocol)
     items = order(items, orders.get(order_id), desc)
 
     return render_template(
@@ -182,7 +182,7 @@ def edit_decision(decision_id=None, protocol_id=None):
         else:
             flash("Решение добавлено", 'success')
         db.session.commit()
-        return redirect(url_for("list_protocols"))
+        return redirect(url_for("list_decisions", protocol_id=decision.protocol_id))
 
     app.logger.debug(form.errors)
 
@@ -227,7 +227,7 @@ def list_resolutions(decision_id=None):
         add = url_for("edit_resolution", decision_id=decision.id)
     else:
         add = url_for("edit_resolution")
-    # items = items.join(Decision)
+    items = items.outerjoin(Decision)
     items = order(items, orders.get(order_id), desc)
 
     return render_template(
@@ -255,6 +255,9 @@ def edit_resolution(decision_id=None, resolution_id=None):
     form = ResolutionForm(obj=resolution)
 
     if form.validate_on_submit():
+        app.logger.debug(form.data)
+        app.logger.debug(resolution)
+        app.logger.debug(resolution.decision)
         form.populate_obj(resolution)
         db.session.add(resolution)
         if resolution.id:
@@ -262,7 +265,7 @@ def edit_resolution(decision_id=None, resolution_id=None):
         else:
             flash("Постановление добавлено", 'success')
         db.session.commit()
-        return redirect(url_for("list_resolutions"))
+        return redirect(url_for("list_resolutions", decision_id=resolution.decision_id))
 
     app.logger.debug(form.errors)
     app.logger.debug("RESOLUTION (%s %s)", resolution.id, resolution)
