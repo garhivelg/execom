@@ -224,6 +224,7 @@ def list_resolutions(decision_id=None):
     orders = {
         1: [Resolution.resolution_id, ],
         2: [Resolution.resolution_date, ],
+        3: [Case.book_id, ],
         4: [Decision.decision_id, ],
     }
 
@@ -235,6 +236,7 @@ def list_resolutions(decision_id=None):
         add = url_for("edit_resolution", decision_id=decision.id)
     else:
         add = url_for("edit_resolution")
+    items = items.outerjoin(Case)
     items = items.outerjoin(Decision)
     items = order(items, orders.get(order_id), desc)
 

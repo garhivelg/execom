@@ -9,6 +9,7 @@ block content
       | {% endif %}
       form(method="post", action="{{ url_for('edit_resolution', resolution_id=resolution.id) }}")
         | {{ form.hidden_tag() }}
+        p(class="sized-field") {{ form.case.label }} {{ form.case(class="form-control") }}
         p(class="sized-field") {{ form.decision.label }} {{ form.decision(class="form-control") }}
         p(class="sized-field") {{ form.resolution_id.label }} {{ form.resolution_id(class="form-control") }}
         p(class="sized-field") {{ form.resolution_date.label }} {{ form.resolution_date(class="form-control") }}

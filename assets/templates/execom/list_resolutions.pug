@@ -51,10 +51,20 @@ block table_headers
       th
         | {%if order_id==3%}
         a(href="?order=3{% if not desc %}&desc={{desc}}{% endif %}") 
-          | Решение
+          | Дело
           i(class="fa fa-chevron-{% if desc %}up{% else %}down{% endif %} pull-right")
         | {%else%}
         a(href="?order=3") 
+          | Дело
+          i(class="fa fa-arrows-v pull-right")
+        | {%endif%}
+      th
+        | {%if order_id==4%}
+        a(href="?order=4{% if not desc %}&desc={{desc}}{% endif %}") 
+          | Решение
+          i(class="fa fa-chevron-{% if desc %}up{% else %}down{% endif %} pull-right")
+        | {%else%}
+        a(href="?order=4") 
           | Решение
           i(class="fa fa-arrows-v pull-right")
         | {%endif%}
@@ -76,6 +86,12 @@ block row_data
     strong Без номера
     | {% endif %}
   td {{ i.resolution_date|formatdate|safe }}  
+  td 
+    | {% if i.case %}
+    a(href="{{ url_for('edit_case', case_id=i.case.id) }}") {{ i.case }}  
+    | {% else %}
+    strong Не привязано к делу
+    | {% endif %}
   td 
     | {% if i.decision %}
     a(href="{{ url_for('list_resolutions', decision_id=i.decision.id) }}") {{ i.decision }}  

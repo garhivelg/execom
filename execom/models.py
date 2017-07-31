@@ -121,6 +121,7 @@ class Decision(db.Model):
                 return self.protocol.protocol_date
             else:
                 return None
+            
     @property
     def decision_id_txt(self):
         if not self.decision_id:
@@ -129,7 +130,6 @@ class Decision(db.Model):
             else:
                 return "б/н"
         return self.decision_id
-
 
     def randomize(self, fake):
         self.decision_num = fake.pyint()
@@ -168,6 +168,7 @@ class DecisionMedia(db.Model):
 
 class Resolution(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    case_id = db.Column(db.Integer, db.ForeignKey('case.id'))
     decision_id = db.Column(db.Integer, db.ForeignKey('decision.id'))
     resolution_id = db.Column(
         db.String(16),
@@ -179,6 +180,7 @@ class Resolution(db.Model):
     resolution_date = db.Column(db.Date, info={'label': "Дата"})
     description = db.Column(db.UnicodeText, info={'label': "Текст"})
 
+    case = db.relationship("Case", backref="resolutions")
     decision = db.relationship("Decision")
 
     def title(self, format="Постановление %s", id_format="№%s", no_id=" б/н"):
