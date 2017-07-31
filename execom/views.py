@@ -1,8 +1,11 @@
-from flask import flash, render_template, redirect, jsonify, request, send_file
+from flask import flash, render_template, redirect, jsonify, request, send_file, session
 from flask.helpers import url_for
 from app import db, app
 from werkzeug.utils import secure_filename
 import os
+
+
+from backup import backup
 
 
 from .models import Protocol, Decision, DecisionMedia, Resolution
@@ -58,6 +61,9 @@ def index():
 
 @app.route("/protocols")
 def list_protocols():
+    app.logger.debug("Saved at %s", session.get("saved"))
+    session["saved"] = backup(session.get("saved"))
+    
     order_id, desc = get_order()
     orders = {
         1: [Protocol.protocol_id, ],
@@ -137,6 +143,9 @@ def del_protocol(protocol_id=None):
 @app.route("/protocol/<int:protocol_id>")
 @app.route("/decisions")
 def list_decisions(protocol_id=None):
+    app.logger.debug("Saved at %s", session.get("saved"))
+    session["saved"] = backup(session.get("saved"))
+    
     order_id, desc = get_order()
     orders = {
         1: [Decision.decision_id, ],
@@ -220,6 +229,9 @@ def del_decision(decision_id=None):
 @app.route("/decision/<int:decision_id>")
 @app.route("/resolutions")
 def list_resolutions(decision_id=None):
+    app.logger.debug("Saved at %s", session.get("saved"))
+    session["saved"] = backup(session.get("saved"))
+    
     order_id, desc = get_order()
     orders = {
         1: [Resolution.resolution_id, ],
