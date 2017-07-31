@@ -69,8 +69,13 @@ block row_data
           i(class="fa fa-edit")
         a(data-href="{{ url_for('del_resolution', resolution_id=i.id) }}", class="btn btn-sm btn-primary confirm" data-toggle="modal", title="Удалить", data-text="Вы уверены, что хотите удалить эту запись?", data-target="#confirm-del")
           i(class="fa fa-eraser")
-  td {{ i.resolution_id }}  
-  td {{ i.resolution_date.strftime("%d %b %Y") }}  
+  td 
+    | {% if i.resolution_id %}
+    | {{ i.resolution_id }}  
+    | {% else %}
+    strong Без номера
+    | {% endif %}
+  td {{ i.resolution_date|formatdate|safe }}  
   td 
     | {% if i.decision %}
     a(href="{{ url_for('list_resolutions', decision_id=i.decision.id) }}") {{ i.decision }}  

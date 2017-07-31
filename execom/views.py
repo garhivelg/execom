@@ -12,6 +12,13 @@ from .forms import ProtocolForm, DecisionForm, ResolutionForm
 from case.models import Case, Register
 
 
+@app.template_filter('formatdate')
+def _jinja2_filter_formatdate(date, fmt="%d %b %Y"):
+    if date is None:
+        return "<strong>Без даты</strong>"
+    return date.strftime(fmt)
+
+
 def page():
     page_str = request.args.get('page')
     try:

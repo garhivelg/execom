@@ -18,8 +18,12 @@ class Protocol(db.Model):
     case = db.relationship("Case", backref="protocols")
     decisions = db.relationship("Decision", backref="protocol")
 
-    def title(self, format="Протокол №%d от %s"):
-        return format % (self.protocol_id, self.date)
+    def title(self, format="Протокол №%d%s", from_format=" от %s"):
+        if self.date:
+            date = from_format % (self.date.strftime("%x"))
+        else:
+            date = ""
+        return format % (self.protocol_id, date)
 
     def __repr__(self):
         return self.title()
@@ -27,7 +31,7 @@ class Protocol(db.Model):
     @property
     def date(self):
         if self.protocol_date:
-            return self.protocol_date.strftime("%x")
+            return self.protocol_date
         return None
 
     @property
@@ -64,8 +68,16 @@ class Decision(db.Model):
 
     # protocol = db.relationship("Protocol")
 
-    def title(self, format="%s Решение №%s \"%s\""):
-        return format % (self.protocol, self.decision_id, self.topic)
+    def title(self, format="%sРешение №%s %s", protocol_format="%s "):
+        if self.protocol:
+            protocol = protocol_format % (self.protocol)
+        else:
+            protocol = ""
+        if self.topic:
+            topic = "\"%s\"" % (self.topic)
+        else:
+            topic = ""
+        return format % (protocol, self.decision_id, topic)
 
     def __repr__(self):
         return self.title()
@@ -75,7 +87,10 @@ class Decision(db.Model):
         if self.decision_date is not None:
             return self.decision_date
         else:
-            return self.protocol.protocol_date
+            if self.protocol:
+                return self.protocol.protocol_date
+            else:
+                return None
 
     def randomize(self, fake):
         self.decision_num = fake.pyint()
@@ -119,8 +134,12 @@ class Resolution(db.Model):
 
     decision = db.relationship("Decision")
 
-    def title(self, format="Постановление №%s"):
-        return format % (self.resolution_id)
+    def title(self, format="Постановление %s", id_format="№%s", no_id=" б/н"):
+        if self.resolution_id:
+            resolution = id_format % (self.resolution_id)
+        else:
+            resolution = no_id
+        return format % (resolution)
 
     def __repr__(self):
         return self.title()
