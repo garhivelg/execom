@@ -77,7 +77,7 @@ class Decision(db.Model):
     )
     decision_num = db.Column(db.Integer, nullable=False, default=0)
     topic = db.Column(
-        db.String(256),
+        db.String(512),
         info={
             'label': "Тема",
             'form_field_class': TextAreaField,
