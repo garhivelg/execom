@@ -21,7 +21,7 @@ def upgrade():
     op.create_table('resolution',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('decision_id', sa.Integer(), nullable=True),
-    sa.Column('resolution_id', sa.String(length=16), nullable=False),
+    sa.Column('resolution_id', sa.String(length=16), nullable=True),
     sa.Column('resolution_num', sa.Integer(), nullable=False),
     sa.Column('resolution_date', sa.Date(), nullable=True),
     sa.Column('description', sa.UnicodeText(), nullable=True),
