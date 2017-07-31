@@ -159,7 +159,7 @@ def list_decisions(protocol_id=None):
         protocol=protocol,
         order_id=order_id,
         desc=desc,
-        title="Протоколы",
+        title="Решения",
         items=items.paginate(page(), app.config.get('RECORDS_ON_PAGE')),
         add=add,
     )
