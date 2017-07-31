@@ -121,6 +121,15 @@ class Decision(db.Model):
                 return self.protocol.protocol_date
             else:
                 return None
+    @property
+    def decision_id_txt(self):
+        if not self.decision_id:
+            if self.decision_num:
+                return self.decision_num
+            else:
+                return "б/н"
+        return self.decision_id
+
 
     def randomize(self, fake):
         self.decision_num = fake.pyint()

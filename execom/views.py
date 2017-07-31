@@ -96,12 +96,14 @@ def edit_protocol(protocol_id=None, case_id=None):
         protocol = Protocol(case=case)
     elif protocol_id is not None:
         protocol = Protocol.query.get_or_404(protocol_id)
+        protocol.normalize()
     else:
         protocol = Protocol()
     form = ProtocolForm(obj=protocol)
 
     if form.validate_on_submit():
         form.populate_obj(protocol)
+        protocol.normalize()
         db.session.add(protocol)
         if protocol.id:
             flash("Протокол изменен", 'success')

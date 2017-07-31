@@ -77,7 +77,7 @@ block row_data
           i(class="fa fa-edit")
         a(data-href="{{ url_for('del_decision', decision_id=i.id) }}", class="btn btn-sm btn-primary confirm" data-toggle="modal", title="Удалить", data-text="Вы уверены, что хотите удалить эту запись?", data-target="#confirm-del")
           i(class="fa fa-eraser")
-  td {{ i.decision_id }}  
+  td {{ i.decision_id_txt }}  
   td {{ i.date|formatdate|safe }}
   td {{ i.topic }}  
   td 
