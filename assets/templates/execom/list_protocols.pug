@@ -61,7 +61,7 @@ block row_data
           i(class="fa fa-eraser")
   td 
     a(href="{{ url_for('list_decisions', protocol_id=p.id) }}") {{ p }}  
-  td {{ p.protocol_id }}  
+  td {% if p.protocol_id %}{{ p.protocol_id }}{% else %}б/н{% endif %}  
   td {{ p.date|formatdate|safe }}
   td  
     | {% if p.case %}
