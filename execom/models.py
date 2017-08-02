@@ -8,8 +8,8 @@ class Protocol(db.Model):
     case_id = db.Column(db.Integer, db.ForeignKey('case.id'))
     protocol_id = db.Column(
         db.Integer,
-        nullable=False,
-        default=1,
+        nullable=True,
+        # default=1,
         info={'label': "Протокол №"}
     )
     protocol_txt = db.Column(
@@ -62,7 +62,10 @@ class Protocol(db.Model):
             self.protocol_txt = self.protocol_id
             return
 
-        res = int(''.join(c for c in self.protocol_txt if c.isdigit()))
+        try:
+            res = int(''.join(c for c in self.protocol_txt if c.isdigit()))
+        except ValueError:
+            res = 0
         self.protocol_id = res
 
 
@@ -121,7 +124,7 @@ class Decision(db.Model):
                 return self.protocol.protocol_date
             else:
                 return None
-            
+
     @property
     def decision_id_txt(self):
         if not self.decision_id:
