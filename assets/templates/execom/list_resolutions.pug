@@ -68,6 +68,8 @@ block table_headers
           | Решение
           i(class="fa fa-arrows-v pull-right")
         | {%endif%}
+      th
+        | Текст
 
 block row_data
   td
@@ -98,3 +100,4 @@ block row_data
     | {% else %}
     strong Не привязано к решению
     | {% endif %}
+  td {{ i.description }}
