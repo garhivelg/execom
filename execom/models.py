@@ -8,8 +8,8 @@ class Protocol(db.Model):
     case_id = db.Column(db.Integer, db.ForeignKey('case.id'))
     protocol_id = db.Column(
         db.Integer,
-        nullable=True,
-        # default=1,
+        nullable=False,
+        default=0,
         info={'label': "Протокол №"}
     )
     protocol_txt = db.Column(
@@ -47,7 +47,10 @@ class Protocol(db.Model):
     @property
     def protocol_id_txt(self):
         if not self.protocol_txt:
-            return self.protocol_id
+            if self.protocol_id:
+                return self.protocol_id
+            else:
+                return "б/н"
         return self.protocol_txt
 
     def randomize(self, fake):
