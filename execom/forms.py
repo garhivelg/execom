@@ -42,6 +42,11 @@ class DecisionForm(ModelForm):
 
 
 class ResolutionForm(ModelForm):
+    case = QuerySelectField(
+        "Дело",
+        query_factory=lambda: Case.query.all(),
+        allow_blank=True,
+    )
     decision = QuerySelectField(
         "Решение",
         query_factory=lambda: Decision.query.all(),

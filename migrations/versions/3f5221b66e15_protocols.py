@@ -30,7 +30,7 @@ def upgrade():
     op.create_table('decision',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('protocol_id', sa.Integer(), nullable=True),
-    sa.Column('decision_id', sa.String(length=16), nullable=False),
+    sa.Column('decision_id', sa.String(length=16), nullable=True),
     sa.Column('decision_num', sa.Integer(), nullable=False),
     sa.Column('description', sa.UnicodeText(), nullable=True),
     sa.ForeignKeyConstraint(['protocol_id'], ['protocol.id'], ),

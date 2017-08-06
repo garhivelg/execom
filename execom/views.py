@@ -1,8 +1,11 @@
-from flask import flash, render_template, redirect, jsonify, request, send_file
+from flask import flash, render_template, redirect, jsonify, request, send_file, session
 from flask.helpers import url_for
 from app import db, app
 from werkzeug.utils import secure_filename
 import os
+
+
+from backup import backup
 
 
 from .models import Protocol, Decision, DecisionMedia, Resolution
@@ -10,6 +13,13 @@ from .forms import ProtocolForm, DecisionForm, ResolutionForm
 
 
 from case.models import Case, Register
+
+
+@app.template_filter('formatdate')
+def _jinja2_filter_formatdate(date, fmt="%d %b %Y"):
+    if date is None:
+        return "<strong>Без даты</strong>"
+    return date.strftime(fmt)
 
 
 def page():
@@ -51,6 +61,9 @@ def index():
 
 @app.route("/protocols")
 def list_protocols():
+    app.logger.debug("Saved at %s", session.get("saved"))
+    session["saved"] = backup(session.get("saved"))
+    
     order_id, desc = get_order()
     orders = {
         1: [Protocol.protocol_id, ],
@@ -89,12 +102,14 @@ def edit_protocol(protocol_id=None, case_id=None):
         protocol = Protocol(case=case)
     elif protocol_id is not None:
         protocol = Protocol.query.get_or_404(protocol_id)
+        protocol.normalize()
     else:
         protocol = Protocol()
     form = ProtocolForm(obj=protocol)
 
     if form.validate_on_submit():
         form.populate_obj(protocol)
+        protocol.normalize()
         db.session.add(protocol)
         if protocol.id:
             flash("Протокол изменен", 'success')
@@ -128,6 +143,9 @@ def del_protocol(protocol_id=None):
 @app.route("/protocol/<int:protocol_id>")
 @app.route("/decisions")
 def list_decisions(protocol_id=None):
+    app.logger.debug("Saved at %s", session.get("saved"))
+    session["saved"] = backup(session.get("saved"))
+    
     order_id, desc = get_order()
     orders = {
         1: [Decision.decision_id, ],
@@ -152,7 +170,7 @@ def list_decisions(protocol_id=None):
         protocol=protocol,
         order_id=order_id,
         desc=desc,
-        title="Протоколы",
+        title="Решения",
         items=items.paginate(page(), app.config.get('RECORDS_ON_PAGE')),
         add=add,
     )
@@ -211,10 +229,14 @@ def del_decision(decision_id=None):
 @app.route("/decision/<int:decision_id>")
 @app.route("/resolutions")
 def list_resolutions(decision_id=None):
+    app.logger.debug("Saved at %s", session.get("saved"))
+    session["saved"] = backup(session.get("saved"))
+    
     order_id, desc = get_order()
     orders = {
         1: [Resolution.resolution_id, ],
         2: [Resolution.resolution_date, ],
+        3: [Case.book_id, ],
         4: [Decision.decision_id, ],
     }
 
@@ -226,6 +248,7 @@ def list_resolutions(decision_id=None):
         add = url_for("edit_resolution", decision_id=decision.id)
     else:
         add = url_for("edit_resolution")
+    items = items.outerjoin(Case)
     items = items.outerjoin(Decision)
     items = order(items, orders.get(order_id), desc)
 

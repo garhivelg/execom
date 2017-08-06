@@ -5,25 +5,28 @@ block content
 
   include _panel.pug
   +panel("Справочник", false, true, true)
-    | {% if items.items %}
-    div
-      .table-responsive
-        table(class="table table-bordered table-hover")
-          block table_headers
+    block items
+      | {% if items %}
+      | {% if items.items %}
+      div
+        .table-responsive
+          table(class="table table-bordered table-hover")
+            block table_headers
 
-          tbody
-            | {% for i in items.items %}
-            tr
-              block row_controls
+            tbody
+              | {% for i in items.items %}
+              tr
+                block row_controls
 
-              block row_data
-                td 
-                  a(href="{{ i[1] }}") {{ i[0] }}  
-                  | {% if i|length > 2 %}
-                  a(href="{{ i[2] }}") <i class="fa fa-edit"></i>  
-                  | {% endif %}
-            | {% endfor %}
-    | {% else %}
-    .panel-body
-      h3 Список пуст
-    | {% endif %}
+                block row_data
+                  td 
+                    a(href="{{ i[1] }}") {{ i[0] }}  
+                    | {% if i|length > 2 %}
+                    a(href="{{ i[2] }}") <i class="fa fa-edit"></i>  
+                    | {% endif %}
+              | {% endfor %}
+      | {% else %}
+      .panel-body
+        h3 Список пуст
+      | {% endif %}
+      | {% endif %}

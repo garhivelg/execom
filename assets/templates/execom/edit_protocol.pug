@@ -6,7 +6,7 @@ block content
       form(method="post", action="{{ url_for('edit_protocol', protocol_id=protocol.id) }}")
         | {{ form.hidden_tag() }}
         p(class="sized-field") {{ form.case.label }} {{ form.case(class="form-control") }}
-        p(class="sized-field") {{ form.protocol_id.label }} {{ form.protocol_id(class="form-control") }}
+        p(class="sized-field") {{ form.protocol_txt.label }} {{ form.protocol_txt(class="form-control") }}
         p(class="sized-field") {{ form.protocol_date.label }} {{ form.protocol_date(class="form-control") }}
         p(class="sized-field")
           | {{ form.description.label }}

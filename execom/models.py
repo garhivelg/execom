@@ -9,7 +9,13 @@ class Protocol(db.Model):
     protocol_id = db.Column(
         db.Integer,
         nullable=False,
-        default=1,
+        default=0,
+        info={'label': "Протокол №"}
+    )
+    protocol_txt = db.Column(
+        db.String(16),
+        nullable=True,
+        default="",
         info={'label': "Протокол №"}
     )
     description = db.Column(db.UnicodeText, info={'label': "Описание"})
@@ -18,8 +24,12 @@ class Protocol(db.Model):
     case = db.relationship("Case", backref="protocols")
     decisions = db.relationship("Decision", backref="protocol")
 
-    def title(self, format="Протокол №%d от %s"):
-        return format % (self.protocol_id, self.date)
+    def title(self, format="Протокол №%s%s", from_format=" от %s"):
+        if self.date:
+            date = from_format % (self.date.strftime("%x"))
+        else:
+            date = ""
+        return format % (self.protocol_id_txt, date)
 
     def __repr__(self):
         return self.title()
@@ -27,12 +37,21 @@ class Protocol(db.Model):
     @property
     def date(self):
         if self.protocol_date:
-            return self.protocol_date.strftime("%x")
+            return self.protocol_date
         return None
 
     @property
     def decisions_count(self):
         return len(self.decisions)
+
+    @property
+    def protocol_id_txt(self):
+        if not self.protocol_txt:
+            if self.protocol_id:
+                return self.protocol_id
+            else:
+                return "б/н"
+        return self.protocol_txt
 
     def randomize(self, fake):
         self.protocol_id = fake.pyint()
@@ -41,19 +60,30 @@ class Protocol(db.Model):
         if chance < 25:
             self.description = "\n".join(fake.paragraphs())
 
+    def normalize(self):
+        if not self.protocol_txt:
+            self.protocol_txt = self.protocol_id
+            return
+
+        try:
+            res = int(''.join(c for c in self.protocol_txt if c.isdigit()))
+        except ValueError:
+            res = 0
+        self.protocol_id = res
+
 
 class Decision(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     protocol_id = db.Column(db.Integer, db.ForeignKey('protocol.id'))
     decision_id = db.Column(
         db.String(16),
-        nullable=False,
-        default="1",
+        nullable=True,
+        default="",
         info={'label': "Решение №"}
     )
     decision_num = db.Column(db.Integer, nullable=False, default=0)
     topic = db.Column(
-        db.String(256),
+        db.String(512),
         info={
             'label': "Тема",
             'form_field_class': TextAreaField,
@@ -64,8 +94,26 @@ class Decision(db.Model):
 
     # protocol = db.relationship("Protocol")
 
-    def title(self, format="%s Решение №%s \"%s\""):
-        return format % (self.protocol, self.decision_id, self.topic)
+    def title(
+        self,
+        format="%sРешение %s %s",
+        protocol_format="%s ",
+        id_format=" №%s",
+        no_id="б/н"
+    ):
+        if self.protocol:
+            protocol = protocol_format % (self.protocol)
+        else:
+            protocol = ""
+        if self.decision_id:
+            decision = id_format % (self.decision_id)
+        else:
+            decision = no_id
+        if self.topic:
+            topic = "\"%s\"" % (self.topic)
+        else:
+            topic = ""
+        return format % (protocol, decision, topic)
 
     def __repr__(self):
         return self.title()
@@ -75,7 +123,19 @@ class Decision(db.Model):
         if self.decision_date is not None:
             return self.decision_date
         else:
-            return self.protocol.protocol_date
+            if self.protocol:
+                return self.protocol.protocol_date
+            else:
+                return None
+
+    @property
+    def decision_id_txt(self):
+        if not self.decision_id:
+            if self.decision_num:
+                return self.decision_num
+            else:
+                return "б/н"
+        return self.decision_id
 
     def randomize(self, fake):
         self.decision_num = fake.pyint()
@@ -86,6 +146,14 @@ class Decision(db.Model):
         chance = random.randint(0, 100)
         if chance < 25:
             self.description = "\n".join(fake.paragraphs())
+
+    def normalize(self):
+        if not self.decision_id:
+            self.decision_id = self.decision_num
+            return
+
+        res = int(''.join(c for c in self.decision_id if c.isdigit()))
+        self.decision_num = res
 
 
 class DecisionMedia(db.Model):
@@ -106,21 +174,27 @@ class DecisionMedia(db.Model):
 
 class Resolution(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    case_id = db.Column(db.Integer, db.ForeignKey('case.id'))
     decision_id = db.Column(db.Integer, db.ForeignKey('decision.id'))
     resolution_id = db.Column(
         db.String(16),
-        nullable=False,
-        default="1",
+        nullable=True,
+        default="",
         info={'label': "Постановление №"}
     )
     resolution_num = db.Column(db.Integer, nullable=False, default=0)
     resolution_date = db.Column(db.Date, info={'label': "Дата"})
     description = db.Column(db.UnicodeText, info={'label': "Текст"})
 
+    case = db.relationship("Case", backref="resolutions")
     decision = db.relationship("Decision")
 
-    def title(self, format="Постановление №%s"):
-        return format % (self.resolution_id)
+    def title(self, format="Постановление %s", id_format="№%s", no_id=" б/н"):
+        if self.resolution_id:
+            resolution = id_format % (self.resolution_id)
+        else:
+            resolution = no_id
+        return format % (resolution)
 
     def __repr__(self):
         return self.title()
@@ -129,3 +203,11 @@ class Resolution(db.Model):
         self.resolution_num = fake.pyint()
         self.resolution_date = fake.past_date(start_date="-20y")
         self.description = "\n".join(fake.paragraphs())
+
+    def normalize(self):
+        if not self.resolution_id:
+            self.resolution_id = self.resolution_num
+            return
+
+        res = int(''.join(c for c in self.resolution_id if c.isdigit()))
+        self.resolution_num = res

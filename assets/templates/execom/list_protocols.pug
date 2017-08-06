@@ -7,7 +7,7 @@ block table_headers
       th(class="col-md-1 col-lg1 col-sm-1")
       th
         | Протокол
-      th(style="width: 50px;")
+      th(style="width: 75px;")
         | {%if order_id==1%}
         a(href="?order=1{% if not desc %}&desc=1{% endif %}&page={{items.page}}") 
           | №
@@ -61,8 +61,8 @@ block row_data
           i(class="fa fa-eraser")
   td 
     a(href="{{ url_for('list_decisions', protocol_id=p.id) }}") {{ p }}  
-  td {{ p.protocol_id }}  
-  td {{ p.date }}  
+  td {% if p.protocol_id %}{{ p.protocol_id }}{% else %}б/н{% endif %}  
+  td {{ p.date|formatdate|safe }}
   td  
     | {% if p.case %}
     a(href="{{ url_for('edit_case', case_id=p.case.id) }}") {{ p.case }}  

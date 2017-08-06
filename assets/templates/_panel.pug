@@ -18,7 +18,12 @@ mixin panel(title, edit, filtered, paged)
         | &nbsp;
         a(href=edit, class="btn btn-sm btn-primary", datat-toggle="tooltip", title="Редактировать")
           i(class="fa fa-edit")
+        | &nbsp;
+        a(data-href="{{ url_for('edit_case', case_id=case.id) }}", class="btn btn-sm btn-primary confirm" data-toggle="modal", title="Удалить", data-text="Вы уверены, что хотите удалить эту запись?", data-target="#confirm-del")
+          i(class="fa fa-eraser")
+          
     if paged
+      | {% if items %}
       div(class="well well-sm")
         include _pagination.pug
         | &nbsp;
@@ -27,6 +32,7 @@ mixin panel(title, edit, filtered, paged)
         .pull-right
           strong Количество: 
           | {{ items.total }}
+      | {% endif %}
     
     if block
       block
