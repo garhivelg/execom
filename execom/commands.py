@@ -60,10 +60,14 @@ def fill():
 
 
 @manager.command
-def export():
+def export(output=None):
     "Export data from db"
     export_data = {'version': '1.0.0', }
-    export_data['registers'] = [str(r) for r in Register.query.all()]
+    export_data['registers'] = [{
+        'id': r.id,
+        'fund': r.fund,
+        'register': r.register,
+    } for r in Register.query.all()]
 
     cases = Case.query.all()
     export_data['cases'] = []
@@ -122,3 +126,8 @@ def export():
         'resolutions': export_data['resolutions'],
     }
     print(yaml.dump(export_data))
+    if output is not None:
+        print("Save to \"%s\"" % (output))
+        with open(output, "w") as outfile:
+            yaml.dump(export_data, outfile, default_flow_style=False, allow_unicode=True)
+        print("Saved to %s" % (output, ))

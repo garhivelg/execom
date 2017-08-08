@@ -209,5 +209,8 @@ class Resolution(db.Model):
             self.resolution_id = self.resolution_num
             return
 
-        res = int(''.join(c for c in self.resolution_id if c.isdigit()))
+        try:
+            res = int(''.join(c for c in self.resolution_id if c.isdigit()))
+        except ValueError:
+            res = self.resolution_num
         self.resolution_num = res
