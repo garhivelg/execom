@@ -71,6 +71,12 @@ class Protocol(db.Model):
             res = 0
         self.protocol_id = res
 
+    def import_yml(self, data=dict()):
+        self.protocol_txt = str(data.get('protocol_id'))
+        self.protocol_date = data.get('date')
+        self.description = data.get('description')
+        self.normalize()
+
 
 class Decision(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -155,6 +161,13 @@ class Decision(db.Model):
         res = int(''.join(c for c in self.decision_id if c.isdigit()))
         self.decision_num = res
 
+    def import_yml(self, data=dict()):
+        self.decision_id = str(data.get('decision_id'))
+        self.decision_date = data.get('date')
+        self.topic = data.get('topic')
+        self.description = data.get('description')
+        self.normalize()
+
 
 class DecisionMedia(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -214,3 +227,9 @@ class Resolution(db.Model):
         except ValueError:
             res = self.resolution_num
         self.resolution_num = res
+
+    def import_yml(self, data=dict()):
+        self.resolution_id = str(data.get('resolution_id'))
+        self.resolution_date = data.get('date')
+        self.description = data.get('description')
+        self.normalize()

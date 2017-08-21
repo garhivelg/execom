@@ -75,7 +75,7 @@ def export(output=None):
         case.normalize()
         export_data['cases'].append({
             'id': str(case.id),
-            'register': str(case.register),
+            'register': str(case.register.id),
             'book': str(case.book_id),
             'description': case.description,
         })
@@ -131,3 +131,82 @@ def export(output=None):
         with open(output, "w") as outfile:
             yaml.dump(export_data, outfile, default_flow_style=False, allow_unicode=True)
         print("Saved to %s" % (output, ))
+
+
+@manager.command
+def import_yml(input=None):
+    "Import data from db"
+    if input is None:
+        print("No data to import")
+        return
+    else:
+        with open(input, 'r') as infile:
+            try:
+                print("Load from \"%s\"" % (input))
+                data = yaml.load(infile)
+                version = data.get('version')
+                if version == "1.0.0":
+                    print(version)
+
+                    registers = data.get('registers', [])
+                    register_lookup = dict()
+                    for r in registers:
+                        fund = r.get('fund')
+                        register = Register.query.filter_by(fund=fund, register=r.get('register')).first()
+                        if register is None:
+                            register = Register(fund=fund)
+                        register.import_yml(r)
+                        print("%s:\t%s" % (r.get('fund'), r))
+                        register_lookup[r.get('id')] = register
+                        db.session.add(register)
+                    db.session.commit()
+
+                    cases = data.get('cases', [])
+                    case_lookup = dict()
+                    for c in cases:
+                        register = register_lookup.get(int(c.get('register')))
+                        case = Case(register=register)
+                        case.import_yml(c)
+                        print("%s:\t%s" % (register, c))
+                        case_lookup[int(c.get('id'))] = case
+                        db.session.add(case)
+                    db.session.commit()
+
+                    protocols = data.get('protocols', [])
+                    protocol_lookup = dict()
+                    for p in protocols:
+                        case = case_lookup.get(p.get('case'))
+                        protocol = Protocol(case=case)
+                        protocol.import_yml(p)
+                        print("%s:\t%s" % (case, p))
+                        protocol_lookup[int(p.get('id'))] = protocol
+                        db.session.add(protocol)
+                    db.session.commit()
+
+                    decisions = data.get('decisions', [])
+                    decision_lookup = dict()
+                    for d in decisions:
+                        protocol = protocol_lookup.get(d.get('protocol'))
+                        decision = Decision(protocol=protocol)
+                        decision.import_yml(d)
+                        print("%s:\t%s" % (protocol, d))
+                        decision_lookup[int(d.get('id'))] = decision
+                        db.session.add(decision)
+                    db.session.commit()
+
+                    resolutions = data.get('resolutions', [])
+                    for r in resolutions:
+                        case = case_lookup.get(r.get('case'))
+                        decision = decision_lookup.get(r.get('decision'))
+                        resolution = Resolution(case=case, decision=decision)
+                        resolution.import_yml(r)
+                        print("%s, %s:\t%s" % (case, decision, r))
+                        db.session.add(resolution)
+                    db.session.commit()
+
+                    print(register_lookup)
+                    print(case_lookup)
+                    print(protocol_lookup)
+                print("Loaded from \"%s\"" % (input))
+            except yaml.YAMLError as exc:
+                print(exc)
