@@ -38,9 +38,9 @@ build_exe_options = {
         "log",
         "upload",
     ],
-    # "path": [
-    #     path.dirname(__file__),
-    # ],
+    "path": [
+        path.join(path.dirname(__file__), "src"),
+    ],
 }
 
 base = None
