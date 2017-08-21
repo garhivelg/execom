@@ -108,3 +108,5 @@ node_modules/
 /assets/**/crud-assets/
 /static/
 /templates/
+gulpfile.js
+*.yml
