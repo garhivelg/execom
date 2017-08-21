@@ -125,7 +125,7 @@ def export(output=None):
         'decisions': export_data['decisions'],
         'resolutions': export_data['resolutions'],
     }
-    print(yaml.dump(export_data))
+    print(yaml.dump(export_data, allow_unicode=True))
     if output is not None:
         print("Save to \"%s\"" % (output))
         with open(output, "w") as outfile:

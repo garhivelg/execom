@@ -25,7 +25,7 @@ def create_app(debug=False, config_name='production'):
     app.config.from_object(app_config[config_name])
     app.static_folder = os.path.join(BASE_DIR, app.config.get('STATIC_FOLDER', 'static'))
     app.template_folder = os.path.join(BASE_DIR, app.config.get('TEMPLATE_FOLDER', 'templates'))
-    
+
     # Session(app)
 
     db = SQLAlchemy(app)
