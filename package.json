@@ -2,11 +2,12 @@
   "name": "execom",
   "version": "0.1.0",
   "description": "Executiv committee database for archive",
-  "main": "manage.py",
+  "main": "src/manage.py",
   "scripts": {
-    "preinstall": "git pull && pip install -r requirements.txt && flask db upgrade && bower install",
+    "preinstall": "git pull",
+    "install": "node scripts/install.js",
     "prestart": "gulp",
-    "start": "python manage.py runserver",
+    "start": "python src/manage.py runserver",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -34,6 +35,7 @@
     "gulp-pug": "^3.3.0"
   },
   "dependencies": {
-    "gulpfile": "git+https://github.com/d2emon/gulpfile.git"
+    "gulpfile": "git+https://github.com/d2emon/gulpfile.git",
+    "shelljs": "^0.7.8"
   }
 }

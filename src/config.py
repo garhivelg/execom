@@ -4,7 +4,6 @@ from datetime import timedelta
 import locale
 
 
-# BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 BASE_DIR = os.path.abspath(os.getcwd())
 # if getattr(sys, 'frozen', False):
 #     BASE_DIR = os.path.dirname(sys.executable)
@@ -23,7 +22,6 @@ class Config(object):
     SECRET_KEY = "ThereIsNoSpoon"
 
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-    # SQLALCHEMY_DATABASE_URI = 'sqlite:///db/execom.db'
 
     LOG = {
         "FILENAME": os.path.join(BASE_DIR, "log", "execom.log"),
@@ -37,9 +35,8 @@ class Config(object):
     BACKUP_PATH = os.path.join(BASE_DIR, "db", "backup")
     DB_FILENAME = "execom.db"
     BACKUP_FILENAME = "execom-%s.db"
-    # SQLALCHEMY_DATABASE_URI = "sqlite:////%s/%s" % (DB_PATH, DB_FILENAME)
-    SQLALCHEMY_DATABASE_URI = "sqlite:///../db/%s" % (DB_FILENAME)
-    # SQLALCHEMY_DATABASE_URI = "sqlite:///db/%s" % (DB_FILENAME)
+    SQLALCHEMY_DATABASE_URI = "sqlite:///%s" % (os.path.join(DB_PATH, DB_FILENAME))
+    # SQLALCHEMY_DATABASE_URI = "sqlite:///../db/%s" % (DB_FILENAME)
 
     VIEW_CASE = "edit_case"
 

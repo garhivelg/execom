@@ -1,6 +1,6 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-from flask_migrate import Migrate
+from flask_migrate import Migrate, MigrateCommand
 from flask_script import Manager
 from config import BASE_DIR, app_config
 
@@ -48,6 +48,7 @@ debug = os.environ.get('FLASK_DEBUG', False)
 config_name = os.environ.get('FLASK_CONFIG', 'production')
 app, db = create_app(config_name=config_name)
 manager = Manager(app)
+manager.add_command('db', MigrateCommand)
 
 
 from execom.commands import *
