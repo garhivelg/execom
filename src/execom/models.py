@@ -158,7 +158,10 @@ class Decision(db.Model):
             self.decision_id = self.decision_num
             return
 
-        res = int(''.join(c for c in self.decision_id if c.isdigit()))
+        try:
+            res = int(''.join(c for c in self.decision_id if c.isdigit()))
+        except ValueError:
+            res = 0
         self.decision_num = res
 
     def import_yml(self, data=dict()):
